@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@classes/*": ["src/Classes/*"],
+      "@routes/*": ["src/Routes/*"]
+    },
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true
+  }
+}
