@@ -1,31 +1,42 @@
-import crypto from "crypto";
-import axios, { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 import qs from 'querystring';
+import crypto from "crypto";
+import request from './request';
+import { dateFormat } from './tool';
 
-const getOptions = (time: Date = new Date()): AxiosRequestConfig => new Object({
-    method: 'post',
-    url: "https://dcid.dcinside.com/join/mobile_app_key_verification_3rd.php",
-    headers: { "User-Agent": "dcinside.app" },
-    data: qs.stringify({
-        'value_token': crypto.createHash('sha256').update(Buffer.from(`dcArdchk_${[
-            time.getFullYear(),
-            time.getMonth() + 1,
-            time.getDate(),
-            time.getHours()
-        ].map(a => (b => b.length == 4 ? b : b.padStart(2, '0'))(a + '')).join('')}`, 'ascii')).digest('hex'),
+export interface appIdInfo {
+    key: string,
+    expire: number
+}
+
+function getOptions(time: Date): AxiosRequestConfig {
+    let token = crypto.createHash('sha256').update(Buffer.from('dcArdchk_' + dateFormat(time), 'ascii')).digest('hex');
+
+    let data = qs.stringify({
+        'value_token': token,
         'signature': 'ReOo4u96nnv8Njd7707KpYiIVYQ3FlcKHDJE046Pg6s='
-    })
-});
+    });
 
-const getAppId = async (time?: Date): Promise<string | null> => {
+    return {
+        method: 'post',
+        url: "https://dcid.dcinside.com/join/mobile_app_key_verification_3rd.php",
+        data
+    };
+};
+
+async function generateAppId(time: Date = new Date()): Promise<appIdInfo> {
+    let req = request.instance.getInstance();
     try {
-        let result = await axios.request(getOptions(time));
-        if (result.data.length == 1 && result.data[0].result) return result.data[0].app_id;
+        let result = await req.request(getOptions(time));
+        if (result.data.length == 1 && result.data[0].result) return {
+            expire: Number.parseInt(dateFormat(time)),
+            key: result.data[0].app_id
+        };
         else throw new Error();
     } catch (error) {
         console.error(`can't get app id!\n${error}`);
-        return null;
+        return { expire: 0, key: '' };
     }
 }
 
-export default { getAppId };
+export default { generateAppId };

@@ -1,10 +1,8 @@
 {
   "dependencies": {
     "@types/node": "^12.7.2",
-    "@types/request": "^2.48.2",
-    "axios": "^0.19.0",
-    "crypto": "^1.0.1",
-    "request": "^2.88.0"
+    "axios": "^0.18.1",
+    "crypto": "^1.0.1"
   },
   "scripts": {
     "start": "tsc && node dist/"
