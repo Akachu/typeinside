@@ -1,15 +1,18 @@
-import article from "./modules/article";
+import article, { articleInfo } from "./modules/article";
 
 const test_1 = async () => {
-  let articleList_1 = await article.getList("kancolle", 244);
+  let gallery = 'cat'
+
+  let articleList_1 = await article.getList(gallery, 3);
   if (articleList_1 == null) return;
   else {
-    let articleDetail_1 = await article.getDetail(
-      "kancolle",
-      articleList_1.articleList[0].index
-    );
+    let article_1 = articleList_1.articleList[0];
+    let article_1_detail = await article.getDetail(gallery, article_1.index);
+    let article_1_comment = await article.getCommentList(article_1.gallery, article_1.index);
 
-    console.log(articleDetail_1);
+    console.log(article_1);
+    console.log(article_1_detail);
+    console.log(article_1_comment);
   }
 };
 

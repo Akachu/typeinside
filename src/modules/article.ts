@@ -2,33 +2,38 @@ import request from "./request";
 import qs from "querystring";
 
 interface galleryInfo {
-  title: string;
-  category?: string;
-  related?: Array<string>;
+  title: string,
+  gallery: string,
+  category?: string,
+  related?: Array<string>,
 }
 
-const getGalleryInfoFromRawData = (data: any): galleryInfo => {
+const getGalleryInfoFromRawData = (gallery: string, data: any): galleryInfo => {
   let { gall_title, category, relation_gall } = data;
+  console.log(data);
   return {
     title: gall_title,
+    gallery,
     category,
     related: relation_gall
   };
 };
 
-interface article {
-  index: number;
-  recommend: number;
-  view: number;
-  comment: number;
-  title: string;
-  nickname: string;
-  userId?: string;
-  ip?: string;
-  time: Date;
+export interface articleInfo {
+  gallery: string,
+  index: number,
+  recommend: number,
+  view: number,
+  comment: number,
+  title: string,
+  nickname: string,
+  hasImage: boolean,
+  userId?: string,
+  ip?: string,
+  time: Date,
 }
 
-const getArticleFromRawData = (data: any): article => {
+const getArticleInfoFromRawData = (gallery: string, data: any): articleInfo => {
   let {
     no,
     subject,
@@ -38,7 +43,8 @@ const getArticleFromRawData = (data: any): article => {
     name,
     date_time,
     recommend,
-    hit
+    hit,
+    img_icon
   } = data;
 
   let time: Date;
@@ -58,11 +64,13 @@ const getArticleFromRawData = (data: any): article => {
   }
 
   return {
+    gallery,
     index: parseInt(no),
     view: parseInt(hit),
     comment: parseInt(total_comment),
     title: subject,
     time,
+    hasImage: img_icon == 'Y',
     nickname: name,
     userId: user_id || undefined,
     ip: ip || undefined,
@@ -87,9 +95,9 @@ async function getList(gallery: string, page: number = 0) {
       throw new Error("개시글 목록을 불러오지 못하였습니다");
 
     let data = result.data[0];
-    let galleryInfo = getGalleryInfoFromRawData(data["gall_info"][0]);
-    let articleList: Array<article> = data["gall_list"].map(
-      (articleData: object) => getArticleFromRawData(articleData)
+    let galleryInfo = getGalleryInfoFromRawData(gallery, data["gall_info"][0]);
+    let articleList: Array<articleInfo> = data["gall_list"].map(
+      (articleInfoData: object) => getArticleInfoFromRawData(gallery, articleInfoData)
     );
 
     return {
@@ -129,5 +137,32 @@ async function getDetail(gallery: string, index: number) {
 
 export default {
   getList,
-  getDetail
+  getDetail,
+  getCommentList
 };
+
+async function getCommentList(gallery: string, no: number, page = 1) {
+  let req = request.instance.getInstance();
+  let appId = await request.instance.getAppId();
+  let param = qs.stringify({
+    app_id: appId.key,
+    id: gallery,
+    no,
+    re_page: page,
+  });
+
+  try {
+    let result = await req.get(
+      request.redirect("http://m.dcinside.com/api/comment_new.php?" + param)
+    );
+
+    if (!result.data || result.data.length == 0)
+      throw new Error("개시글 정보를 불러오지 못하였습니다");
+
+    let data = result.data[0];
+    return data;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+}
