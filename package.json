@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "@types/node": "^12.7.2",
-    "axios": "^0.18.1",
-    "crypto": "^1.0.1"
+    "@types/node": "^12.12.14",
+    "axios": "^0.19.0"
   },
   "scripts": {
-    "start": "tsc && node dist/"
-  }
+    "start": "tsc && node ./dist/"
+  },
+  "license": "MIT"
 }
