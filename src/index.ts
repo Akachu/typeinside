@@ -65,7 +65,6 @@ async function getToken() {
   } catch (err) {
     console.error(err);
     console.log("failed to get token");
-
     throw err;
   }
 }
@@ -83,18 +82,39 @@ async function request(
     };
   }
 
+  // let formDataString: string;
   let formData: FormData;
 
   return new Promise((resolve, reject) => {
+    // if (data) {
+    //   formDataString = "";
+
+    //   let boundary = "----------------------------";
+
+    //   let rn = Math.random()
+    //     .toFixed(24)
+    //     .substr(2);
+
+    //   boundary += rn;
+
+    //   for (let key in data) {
+    //     let chunk = `${boundary}\nContent-Disposition: form-data; name="${key}"\n\n${data[key]}\n`;
+    //     formDataString += chunk;
+    //   }
+    //   formDataString += boundary + "--";
+
+    //   headers = {
+    //     ...headers,
+    //     "Content-Type": `multipart/form-data; boundary=${boundary}`
+    //   };
+    // }
+
     if (data) {
       formData = new FormData();
 
       for (let key in data) {
         formData.append(key, data[key]);
       }
-
-      console.log(formData.getHeaders());
-
       headers = {
         ...headers,
         ...formData.getHeaders()
@@ -106,20 +126,18 @@ async function request(
       headers
     };
 
+    // if (data) {
+    //   option = { ...option, data: formDataString };
+    //   console.log(option);
+    // }
+
     let protocol = url.split("://")[0] == "http" ? http : https;
     let request = protocol.request(url, option, handleResponse);
-    let fd = formData;
 
     if (formData) {
-      //TODO: form-data 모듈 사용안하고 요청
-      fd.on("data", chunk => {
-        console.log("===============================");
-        console.log(chunk);
-        console.log("-------------------------------");
-      });
-
       formData.pipe(request);
     }
+
     request.on("error", reject).end();
 
     function handleResponse(res: http.IncomingMessage) {
@@ -137,6 +155,7 @@ async function request(
         } catch (err) {
           console.error(err);
           console.log(responseData);
+          throw err;
           resolve(null);
         }
       });
@@ -144,4 +163,4 @@ async function request(
   });
 }
 
-getToken();
+getToken().then(console.log);
