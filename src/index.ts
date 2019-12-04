@@ -4,7 +4,7 @@ import https from "https";
 import { parse as parseUrl } from "url";
 
 const APP_CHECK_API = "http://json2.dcinside.com/json0/app_check_A_rina.php";
-const APP_KET_VERIFICATION_API =
+const APP_KEY_VERIFICATION_API =
   "https://dcid.dcinside.com/join/mobile_app_key_verification_3rd.php";
 
 const API_REQUEST_HEADER = {
@@ -20,10 +20,10 @@ const DEFAULT_HEADERS = {
   "Content-Type": DEFAULT_CONTENT_TYPE
 };
 
-async function getDate() {
+async function getDate(): Promise<string | null> {
   let res = await request("GET", APP_CHECK_API);
 
-  if (res === null || res[0] === null || res[0].date === null) {
+  if (!res || !res[0] || !res[0].date) {
     console.error("can't get date");
     return null;
   } else {
@@ -32,14 +32,14 @@ async function getDate() {
 }
 
 async function getValueToken() {
-  const time = await getDate();
+  const date = await getDate();
 
-  if (time === null) {
+  if (!date) {
     console.log("failed to generate value token");
     return null;
   }
 
-  const food = "dcArdchk_" + time;
+  const food = "dcArdchk_" + date;
 
   const hash = crypto
     .createHash("sha256")
@@ -49,9 +49,9 @@ async function getValueToken() {
   return hash;
 }
 
-async function getToken() {
+async function getToken(): Promise<string | null> {
   const valueToken = await getValueToken();
-  if (valueToken === null) {
+  if (!valueToken) {
     console.log("failed to get token");
     return null;
   }
@@ -65,11 +65,12 @@ async function getToken() {
   let res;
 
   try {
-    res = await request("POST", APP_KET_VERIFICATION_API, undefined, data);
+    res = await request("POST", APP_KEY_VERIFICATION_API, undefined, data);
     return res[0].app_id;
   } catch (err) {
     console.error(err);
     console.log("failed to get token");
+    return null;
   }
 }
 
@@ -79,17 +80,16 @@ async function request(
   headers: Record<string, string> = DEFAULT_HEADERS,
   data?: Record<string, string>
 ): Promise<any> {
-  let formData: string = "";
+  const boundary = "bnd";
+  let formData: string;
 
   if (data) {
-    const boundary = "bnd";
+    formData = "";
 
     headers["Content-Type"] = `multipart/form-data; boundary=${boundary}`;
 
     for (let key in data) {
-      formData += `--${boundary}\n`;
-      formData += `Content-Disposition: form-data; name="${key}"\n\n`;
-      formData += `${data[key]}\n`;
+      formData += `--${boundary}\nContent-Disposition: form-data; name="${key}"\n\n${data[key]}\n`;
     }
 
     formData += `--${boundary}--`;
@@ -103,17 +103,16 @@ async function request(
   let protocol = parseUrl(url).protocol === "http:" ? http : https;
 
   return new Promise((resolve, reject) => {
-    let request = protocol.request(url, option, res => {
+    let request = protocol.request(url, option, response => {
       let responseData = "";
 
-      res.on("data", chunk => {
+      response.on("data", chunk => {
         responseData += chunk;
       });
 
-      res.on("end", function() {
-        let parsedData;
+      response.on("end", () => {
         try {
-          parsedData = JSON.parse(responseData);
+          let parsedData = JSON.parse(responseData);
           resolve(parsedData);
         } catch (err) {
           reject(err);
