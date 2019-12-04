@@ -70,7 +70,6 @@ async function getToken() {
   } catch (err) {
     console.error(err);
     console.log("failed to get token");
-    throw err;
   }
 }
 
@@ -101,7 +100,7 @@ async function request(
     headers
   };
 
-  let protocol = parseUrl(url).protocol === "http" ? http : https;
+  let protocol = parseUrl(url).protocol === "http:" ? http : https;
 
   return new Promise((resolve, reject) => {
     let request = protocol.request(url, option, res => {
@@ -117,9 +116,7 @@ async function request(
           parsedData = JSON.parse(responseData);
           resolve(parsedData);
         } catch (err) {
-          console.error(err);
-          console.log(responseData);
-          resolve(null);
+          reject(err);
         }
       });
     });
