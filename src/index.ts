@@ -1,7 +1,7 @@
-import FormData from "form-data";
 import crypto from "crypto";
 import http from "http";
 import https from "https";
+import { parse as parseUrl } from "url";
 
 const APP_CHECK_API = "http://json2.dcinside.com/json0/app_check_A_rina.php";
 const APP_KET_VERIFICATION_API =
@@ -14,6 +14,11 @@ const API_REQUEST_HEADER = {
 };
 
 const DEFAULT_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
+
+const DEFAULT_HEADERS = {
+  ...API_REQUEST_HEADER,
+  "Content-Type": DEFAULT_CONTENT_TYPE
+};
 
 async function getDate() {
   let res = await request("GET", APP_CHECK_API);
@@ -72,75 +77,34 @@ async function getToken() {
 async function request(
   method: string = "GET",
   url: string,
-  headers?: Record<string, string>,
+  headers: Record<string, string> = DEFAULT_HEADERS,
   data?: Record<string, string>
 ): Promise<any> {
-  if (headers === undefined) {
-    headers = {
-      ...API_REQUEST_HEADER,
-      "Content-Type": DEFAULT_CONTENT_TYPE
-    };
+  let formData: string = "";
+
+  if (data) {
+    const boundary = "bnd";
+
+    headers["Content-Type"] = `multipart/form-data; boundary=${boundary}`;
+
+    for (let key in data) {
+      formData += `--${boundary}\n`;
+      formData += `Content-Disposition: form-data; name="${key}"\n\n`;
+      formData += `${data[key]}\n`;
+    }
+
+    formData += `--${boundary}--`;
   }
 
-  // let formDataString: string;
-  let formData: FormData;
+  let option: http.RequestOptions = {
+    method,
+    headers
+  };
+
+  let protocol = parseUrl(url).protocol === "http" ? http : https;
 
   return new Promise((resolve, reject) => {
-    // if (data) {
-    //   formDataString = "";
-
-    //   let boundary = "----------------------------";
-
-    //   let rn = Math.random()
-    //     .toFixed(24)
-    //     .substr(2);
-
-    //   boundary += rn;
-
-    //   for (let key in data) {
-    //     let chunk = `${boundary}\nContent-Disposition: form-data; name="${key}"\n\n${data[key]}\n`;
-    //     formDataString += chunk;
-    //   }
-    //   formDataString += boundary + "--";
-
-    //   headers = {
-    //     ...headers,
-    //     "Content-Type": `multipart/form-data; boundary=${boundary}`
-    //   };
-    // }
-
-    if (data) {
-      formData = new FormData();
-
-      for (let key in data) {
-        formData.append(key, data[key]);
-      }
-      headers = {
-        ...headers,
-        ...formData.getHeaders()
-      };
-    }
-
-    let option = {
-      method,
-      headers
-    };
-
-    // if (data) {
-    //   option = { ...option, data: formDataString };
-    //   console.log(option);
-    // }
-
-    let protocol = url.split("://")[0] == "http" ? http : https;
-    let request = protocol.request(url, option, handleResponse);
-
-    if (formData) {
-      formData.pipe(request);
-    }
-
-    request.on("error", reject).end();
-
-    function handleResponse(res: http.IncomingMessage) {
+    let request = protocol.request(url, option, res => {
       let responseData = "";
 
       res.on("data", chunk => {
@@ -155,11 +119,15 @@ async function request(
         } catch (err) {
           console.error(err);
           console.log(responseData);
-          throw err;
           resolve(null);
         }
       });
-    }
+    });
+
+    if (data) request.write(formData);
+
+    request.on("error", reject);
+    request.end();
   });
 }
 
