@@ -1,7 +1,9 @@
 import http from "http";
 import https from "https";
 import { parse as parseUrl } from "url";
-import { HEADERS } from "./api";
+import { HEADERS, API } from "./api";
+import fs from "fs";
+import { Transform as Stream } from "stream";
 
 export enum RequestMethod {
   GET = "GET",
@@ -57,44 +59,81 @@ export async function request(
     headers
   };
 
-  if (query) {
-    let queryArr = [];
-    for (let key in query) {
-      queryArr.push(`${key}=${query[key]}`);
-    }
-    let queryString = queryArr.join("&");
-    url += `?${queryString}`;
-  }
+  if (query) url += `?${makeQueryString(query)}`;
 
   let protocol = parseUrl(url).protocol === "http:" ? http : https;
 
   return new Promise((resolve, reject) => {
-    let request = protocol.request(url, requestOptions, response => {
+    let req = protocol.request(url, requestOptions, response => {
+      const headers = response.headers;
+      const contentType = headers["content-type"] || "";
+      const disposition = headers["content-disposition"];
+
       let responseData = "";
+      let imageStream = new Stream();
+
+      let isImage: boolean = contentType.indexOf("image") !== -1;
 
       response.on("data", chunk => {
-        responseData += chunk;
+        if (isImage) {
+          imageStream.push(chunk);
+        } else {
+          responseData += chunk;
+        }
       });
 
       response.on("end", () => {
-        try {
-          let parsedData = JSON.parse(responseData);
-          resolve(parsedData);
-        } catch (err) {
-          reject(err);
+        if (response.statusCode === 302 || headers.location) {
+          get(headers.location!).then(resolve);
+        } else if (!isImage) {
+          try {
+            let parsedData = JSON.parse(responseData);
+            resolve(parsedData);
+          } catch (err) {
+            reject(err);
+          }
+        } else {
+          let filename = disposition!.split("filename=")[1];
+          let ext = contentType!.split("image/")[1];
+
+          fs.writeFile(
+            `./imgs/${filename}.${ext}`,
+            imageStream.read(),
+            () => {}
+          );
         }
       });
     });
 
-    if (data) request.write(data);
+    if (data) req.write(data);
 
-    request.on("error", reject);
-    request.end();
+    req.on("error", reject);
+    req.end();
   });
 }
 
 export function get(url: string, options: RequestOptions = {}): Promise<any> {
-  return request(RequestMethod.GET, url, { headers: options.headers });
+  return request(RequestMethod.GET, url, {
+    headers: options.headers,
+    query: options.query
+  });
+}
+
+export namespace get {
+  export function withHash(
+    url: string,
+    options: RequestOptions = {}
+  ): Promise<any> {
+    let { query } = options;
+
+    if (query) url += `?${makeQueryString(query)}`;
+
+    let hash = Buffer.from(url).toString("base64");
+
+    url = `${API.REDIRECT}?hash=${hash}`;
+
+    return get(url);
+  }
 }
 
 export function post(
