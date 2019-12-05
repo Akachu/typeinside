@@ -21,6 +21,6 @@
     },
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
   }
 }
