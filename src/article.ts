@@ -1,5 +1,5 @@
 import { get } from "./request";
-import { API, HEADERS } from "./api";
+import { API } from "./api";
 
 export namespace article {
   export async function list(
@@ -29,7 +29,7 @@ export namespace article {
     data.forEach((element: any) => {
       let url = element.img;
       if (!url) return;
-      get(element.img, { headers: HEADERS.IMAGE });
+      get.image(element.img);
     });
   }
 }

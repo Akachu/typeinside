@@ -1,11 +1,11 @@
+import fs from "fs";
 import http from "http";
 import https from "https";
 import { parse as parseUrl } from "url";
 import { HEADERS, API } from "./api";
-import fs from "fs";
-import { Transform as Stream } from "stream";
+import { Transform } from "stream";
 
-export enum RequestMethod {
+enum RequestMethod {
   GET = "GET",
   POST = "POST"
 }
@@ -15,6 +15,12 @@ interface RequestOptions {
   query?: Record<string, string>;
   data?: string;
   isMultipart?: boolean;
+}
+
+interface ImageData {
+  fileName: string;
+  extension: string;
+  data?: any;
 }
 
 export function makeQueryString(query: Record<string, string>) {
@@ -48,7 +54,8 @@ function makeMultipartData(data: Record<string, string>) {
 export async function request(
   method: RequestMethod,
   url: string,
-  options: RequestOptions = {}
+  options: RequestOptions = {},
+  responseHandler?: (res: http.IncomingMessage) => void
 ): Promise<any> {
   let { headers, data, query } = options;
 
@@ -63,53 +70,38 @@ export async function request(
 
   let protocol = parseUrl(url).protocol === "http:" ? http : https;
 
-  return new Promise((resolve, reject) => {
-    let req = protocol.request(url, requestOptions, response => {
-      const headers = response.headers;
-      const contentType = headers["content-type"] || "";
-      const disposition = headers["content-disposition"];
+  if (responseHandler) {
+    let req = protocol.request(url, requestOptions, responseHandler);
+    req.on("error", err => {
+      Promise.reject(err);
+    });
+    req.end();
+    return Promise.resolve(true);
+  } else {
+    let res: http.IncomingMessage = await new Promise((resolve, reject) => {
+      let req = protocol.request(url, requestOptions, resolve);
 
-      let responseData = "";
-      let imageStream = new Stream();
+      if (data) req.write(data);
 
-      let isImage: boolean = contentType.indexOf("image") !== -1;
-
-      response.on("data", chunk => {
-        if (isImage) {
-          imageStream.push(chunk);
-        } else {
-          responseData += chunk;
-        }
-      });
-
-      response.on("end", () => {
-        if (response.statusCode === 302 || headers.location) {
-          get(headers.location!).then(resolve);
-        } else if (!isImage) {
-          try {
-            let parsedData = JSON.parse(responseData);
-            resolve(parsedData);
-          } catch (err) {
-            reject(err);
-          }
-        } else {
-          let filename = disposition!.split("filename=")[1];
-          let ext = contentType!.split("image/")[1];
-
-          fs.writeFile(
-            `./imgs/${filename}.${ext}`,
-            imageStream.read(),
-            () => {}
-          );
-        }
-      });
+      req.on("error", reject);
+      req.end();
     });
 
-    if (data) req.write(data);
+    const headers = res.headers;
+    let responseData = "";
 
-    req.on("error", reject);
-    req.end();
-  });
+    res.on("data", chunk => {
+      responseData += chunk;
+    });
+
+    await new Promise(resolve => res.on("end", resolve));
+
+    if (res.statusCode === 302 || headers.location) {
+      return get(headers.location!);
+    } else {
+      return JSON.parse(responseData);
+    }
+  }
 }
 
 export function get(url: string, options: RequestOptions = {}): Promise<any> {
@@ -133,6 +125,51 @@ export namespace get {
     url = `${API.REDIRECT}?hash=${hash}`;
 
     return get(url);
+  }
+
+  // function imageHandler(res: http.IncomingMessage) {}
+
+  export async function image(
+    url: string,
+    savePath?: string
+  ): Promise<ImageData> {
+    let imageStream: Transform = new Transform();
+    let fileName: string;
+    let extension: string;
+
+    let options = {
+      headers: HEADERS.IMAGE
+    };
+
+    let res: http.IncomingMessage = await new Promise(resolve =>
+      request(RequestMethod.GET, url, options, resolve)
+    );
+
+    let headers = res.headers;
+
+    let disposition = headers["content-disposition"];
+    let contentType = headers["content-type"];
+
+    fileName = disposition!.split("filename=")[1];
+    extension = contentType!.split("image/")[1];
+    let imageData: ImageData = {
+      fileName,
+      extension
+    };
+    res.on("data", chunk => imageStream.push(chunk));
+
+    if (savePath) {
+      let writeStream = fs.createWriteStream(
+        `${savePath}/${fileName}.${extension}`
+      );
+      writeStream.pipe(imageStream);
+      await new Promise(resolve => writeStream.on("close", resolve));
+    } else {
+      await new Promise(resolve => res.on("end", resolve));
+      imageData.data = imageStream.read();
+    }
+
+    return imageData;
   }
 }
 
