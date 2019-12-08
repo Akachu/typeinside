@@ -62,3 +62,31 @@ export default async function getAppId() {
     return null;
   }
 }
+
+export class Session {
+  private static _default: Session;
+
+  public static get default(): Session {
+    if (!Session._default) {
+      Session._default = new Session();
+    }
+
+    return Session._default;
+  }
+
+  _AppId: string | undefined;
+
+  public async AppId() {
+    if (!this._AppId) {
+      await this.getNewAppId();
+    }
+    return this._AppId;
+  }
+
+  public async getNewAppId() {
+    let _appId = await getAppId();
+    if (!_appId) return;
+
+    this._AppId = _appId;
+  }
+}

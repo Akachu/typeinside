@@ -4,6 +4,7 @@ import https from "https";
 import { parse as parseUrl } from "url";
 import { HEADERS, API } from "./api";
 import { Transform } from "stream";
+import { Session } from "./token";
 
 enum RequestMethod {
   GET = "GET",
@@ -112,19 +113,33 @@ export function get(url: string, options: RequestOptions = {}): Promise<any> {
 }
 
 export namespace get {
-  export function withHash(
+  export async function withHash(
     url: string,
     options: RequestOptions = {}
   ): Promise<any> {
     let { query } = options;
 
-    if (query) url += `?${makeQueryString(query)}`;
+    if (query) {
+      let appId = await Session.default.AppId();
+      if (!appId) return null;
+
+      query.app_id = appId;
+      url += `?${makeQueryString(query)}`;
+    }
 
     let hash = Buffer.from(url).toString("base64");
 
     url = `${API.REDIRECT}?hash=${hash}`;
 
-    return get(url);
+    let data = await get(url);
+
+    if (data && data[0] && data[0].cause === "bad") {
+      await Session.default.getNewAppId();
+
+      return await withHash(url, options);
+    }
+
+    return data;
   }
 
   export async function image(
@@ -165,9 +180,9 @@ export namespace get {
 
     if (savePath) {
       let random = Math.random()
-      .toFixed(5)
-      .substr(2);
-      
+        .toFixed(5)
+        .substr(2);
+
       let filePath = `${savePath}/${fileName}_${random}.${extension}`;
       let writeStream = fs.createWriteStream(filePath + "_saving");
       imageStream.pipe(writeStream);
@@ -180,7 +195,7 @@ export namespace get {
       await end;
     }
 
-    imageData.data = imageStream.read();
+    imageData.data = imageStream;
 
     return Promise.resolve(imageData);
   }

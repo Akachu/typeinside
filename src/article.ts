@@ -1,6 +1,7 @@
 import { get } from "./request";
 import { API } from "./api";
 import fs from "fs";
+import { Session } from "./token";
 
 interface NeighborArticle {
   index: number;
@@ -151,10 +152,9 @@ function parseArticleDetailData(data: any) {
   return parsedDetail;
 }
 
-export async function list(galleryId: string, page = 1, appId: string) {
+export async function list(galleryId: string, page = 1) {
   let options = {
     query: {
-      app_id: appId,
       page: page.toString(),
       id: galleryId
     }
@@ -170,10 +170,9 @@ export async function list(galleryId: string, page = 1, appId: string) {
   }
 }
 
-export async function detail(galleryId: string, index: number, appId: string) {
+export async function detail(galleryId: string, index: number) {
   let options = {
     query: {
-      app_id: appId,
       no: index.toString(),
       id: galleryId
     }
@@ -193,16 +192,17 @@ export async function detail(galleryId: string, index: number, appId: string) {
   }
 }
 
-export async function lastIndex(galleryId: string, appId: string) {
-  let articleList = await list(galleryId, 1, appId);
+export async function lastIndex(galleryId: string) {
+  let articleList = await list(galleryId, 1);
   if (!articleList) return null;
   return articleList[0].index;
 }
 
-export async function image(galleryId: string, index: number, appId: string) {
+
+
+export async function image(galleryId: string, index: number) {
   let options = {
     query: {
-      app_id: appId,
       no: index.toString(),
       id: galleryId
     }
@@ -211,31 +211,24 @@ export async function image(galleryId: string, index: number, appId: string) {
   let data = await get.withHash(API.ARTICLE.IMAGE, options);
 
   if (data && data[0] && data[0].img) {
-    if (!fs.existsSync("./imgs/")) fs.mkdirSync("./imgs/");
-    
-    for (let item of data) {
-      let res = await get.image(item.img, "./imgs/");
-      if (res.fileName === "" || res.extension === "") {
-        console.log(res, index);
-      }
-    }
+    // if (!fs.existsSync("./imgs/")) fs.mkdirSync("./imgs/");
+
+    // for (let item of data) {
+    //   let res = await get.image(item.img, "./imgs/");
+    //   if (res.fileName === "" || res.extension === "") {
+    //     console.log(res, index);
+    //   }
+    // }
+    return data;
   }
   return null;
 }
 
 interface ArticleModule {
-  list: (
-    galleryId: string,
-    page: number,
-    appId: string
-  ) => Promise<Array<Article> | null>;
-  detail: (
-    galleryId: string,
-    index: number,
-    appId: string
-  ) => Promise<ArticleDetail | null>;
-  lastIndex: (galleryId: string, appId: string) => Promise<number | null>;
-  image: (galleryId: string, index: number, appId: string) => Promise<any>;
+  list: (galleryId: string, page: number) => Promise<Array<Article> | null>;
+  detail: (galleryId: string, index: number) => Promise<ArticleDetail | null>;
+  lastIndex: (galleryId: string) => Promise<number | null>;
+  image: (galleryId: string, index: number) => Promise<any>;
 }
 
 const MODULE: ArticleModule = {
