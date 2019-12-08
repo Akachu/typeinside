@@ -127,8 +127,6 @@ export namespace get {
     return get(url);
   }
 
-  // function imageHandler(res: http.IncomingMessage) {}
-
   export async function image(
     url: string,
     savePath?: string
@@ -150,26 +148,41 @@ export namespace get {
     let disposition = headers["content-disposition"];
     let contentType = headers["content-type"];
 
+    if (!disposition || !contentType) {
+      return Promise.resolve({ fileName: "", extension: "" });
+    }
+
     fileName = disposition!.split("filename=")[1];
-    extension = contentType!.split("image/")[1];
+    extension = contentType!.split("image/")[1].toLowerCase();
     let imageData: ImageData = {
       fileName,
       extension
     };
+
     res.on("data", chunk => imageStream.push(chunk));
 
+    let end = new Promise(resolve => res.on("end", resolve));
+
     if (savePath) {
-      let writeStream = fs.createWriteStream(
-        `${savePath}/${fileName}.${extension}`
-      );
-      writeStream.pipe(imageStream);
+      let random = Math.random()
+      .toFixed(5)
+      .substr(2);
+      
+      let filePath = `${savePath}/${fileName}_${random}.${extension}`;
+      let writeStream = fs.createWriteStream(filePath + "_saving");
+      imageStream.pipe(writeStream);
+      await end;
+      imageStream.end();
       await new Promise(resolve => writeStream.on("close", resolve));
+      writeStream.end();
+      fs.renameSync(filePath + "_saving", filePath);
     } else {
-      await new Promise(resolve => res.on("end", resolve));
-      imageData.data = imageStream.read();
+      await end;
     }
 
-    return imageData;
+    imageData.data = imageStream.read();
+
+    return Promise.resolve(imageData);
   }
 }
 

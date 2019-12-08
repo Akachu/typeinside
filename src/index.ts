@@ -1,21 +1,33 @@
-import { article } from "./article";
 import getAppId from "./token";
+import article, { list } from "./article";
 
-async function test(id: string) {
-  let now = 0;
+async function test2(id: string) {
+  let now: number;
   let appId = await getAppId();
 
+  let downloaded = 0;
+
   setInterval(() => {
-    article.list(id, 1, appId!).then(list => {
-      if (!list) return;
-      let last = list[0].no;
-      if (last > now) {
+    article.lastIndex(id, appId!).then(async last => {
+      if (!last) {
+        return;
+      } else if (!now) {
         now = last;
-        console.log(id, now, list[0].subject);
-        article.detail(id, now, appId!);
+      } else if (last > now) {
+        // console.log(id, now, '->', last, 'new:', last - now);
+        let from = now;
+        now = last;
+        for (let i = from + 1; i <= last; i++) {
+          article.image(id, i, appId!);
+          downloaded++;
+          console.log(id, i, 'dl:', downloaded);
+          await delay(100);
+        }
       }
     });
   }, 500);
 }
 
-// test('cat');
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
