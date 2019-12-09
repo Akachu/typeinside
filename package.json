@@ -5,5 +5,6 @@
   "scripts": {
     "start": "tsc && node ./dist/"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "author": "Akachu(marscop@naver.com)"
 }

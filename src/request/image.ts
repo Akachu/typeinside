@@ -1,0 +1,69 @@
+import { Transform, Stream } from "stream";
+import { request, RequestMethod } from "./request";
+import { HEADERS } from "../api";
+import fs from "fs";
+import http from "http";
+
+interface ImageData {
+	fileName: string;
+	extension: string;
+	data?: Stream;
+}
+
+export async function image(
+	url: string,
+	savePath?: string
+): Promise<ImageData> {
+	let imageStream: Transform = new Transform();
+	let fileName: string;
+	let extension: string;
+
+	let options = {
+		headers: HEADERS.IMAGE
+	};
+
+	let res: http.IncomingMessage = await new Promise(resolve =>
+		request(RequestMethod.GET, url, options, resolve)
+	);
+
+	let headers = res.headers;
+
+	let disposition = headers["content-disposition"];
+	let contentType = headers["content-type"];
+
+	if (!disposition || !contentType) {
+		return Promise.resolve({ fileName: "", extension: "" });
+	}
+
+	fileName = disposition!.split("filename=")[1];
+	extension = contentType!.split("image/")[1].toLowerCase();
+	let imageData: ImageData = {
+		fileName,
+		extension
+	};
+
+	res.on("data", chunk => imageStream.push(chunk));
+
+	let end = new Promise(resolve => res.on("end", resolve));
+
+	if (savePath) {
+		let random = Math.random()
+			.toFixed(5)
+			.substr(2);
+
+		let filePath = `${savePath}/${fileName}_${random}.${extension}`;
+		let writeStream = fs.createWriteStream(filePath + "_saving");
+		imageStream.pipe(writeStream);
+		await end;
+		imageStream.end();
+		await new Promise(resolve => writeStream.on("close", resolve));
+		writeStream.end();
+		fs.renameSync(filePath + "_saving", filePath);
+	} else {
+		await end;
+	}
+
+	imageData.data = imageStream;
+
+	return Promise.resolve(imageData);
+}
