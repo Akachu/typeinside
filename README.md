@@ -1,16 +1,16 @@
-# tsinside
+# typeinside
 
 
 ## Install
 
-- ``npm i tsinside --save``
+- ``npm i typeinside --save``
 
 ## Usage
 
 ### get article data
 
 ```ts
-import { article, request } from('tsinside');
+import { article, request } from('typeinside');
 
 /** @returns Array<Article> */
 let articleList = await article.list(galleryName);

@@ -1,5 +1,5 @@
 {
-  "name": "tsinside",
+  "name": "typeinside",
   "description": "promise-based dcinside unofficial api(wip) for personal use",
   "devDependencies": {
     "@types/node": "^12.12.14"
