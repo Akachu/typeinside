@@ -1,5 +1,5 @@
 # tsinside
 
-
+see also...
 - [goinside](https://github.com/geeksbaek/goinside)
-- [KotlinInside](https://github.com/organization/KotlinInside)
+- [pyinside](https://github.com/Jeongsj/pyinside)
