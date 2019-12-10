@@ -11,5 +11,9 @@
   "author": "marscop <marscop7@gmail.com>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.1"
+  "version": "0.0.3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Akachu/typeinside.git"
+  }
 }
