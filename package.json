@@ -1,4 +1,6 @@
 {
+  "name": "tsinside",
+  "description": "promise-based dcinside unofficial api(wip) for personal use",
   "devDependencies": {
     "@types/node": "^12.12.14"
   },
@@ -6,5 +8,8 @@
     "start": "tsc && node ./dist/"
   },
   "license": "MIT",
-  "author": "Akachu(marscop@naver.com)"
+  "author": "marscop <marscop7@gmail.com>",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "version": "0.0.1"
 }

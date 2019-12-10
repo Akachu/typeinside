@@ -7,13 +7,13 @@ import http from "http";
 interface ImageData {
 	fileName: string;
 	extension: string;
-	data?: Stream;
+	data: Transform;
 }
 
 export async function image(
 	url: string,
 	savePath?: string
-): Promise<ImageData> {
+): Promise<ImageData | null> {
 	let imageStream: Transform = new Transform();
 	let fileName: string;
 	let extension: string;
@@ -32,15 +32,11 @@ export async function image(
 	let contentType = headers["content-type"];
 
 	if (!disposition || !contentType) {
-		return Promise.resolve({ fileName: "", extension: "" });
+		return null;
 	}
 
 	fileName = disposition!.split("filename=")[1];
 	extension = contentType!.split("image/")[1].toLowerCase();
-	let imageData: ImageData = {
-		fileName,
-		extension
-	};
 
 	res.on("data", chunk => imageStream.push(chunk));
 
@@ -63,7 +59,11 @@ export async function image(
 		await end;
 	}
 
-	imageData.data = imageStream;
-
+	let imageData: ImageData = {
+		fileName,
+		extension,
+		data: imageStream
+	};
+	
 	return Promise.resolve(imageData);
 }
