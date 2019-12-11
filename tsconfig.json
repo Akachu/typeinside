@@ -14,7 +14,6 @@
     "noImplicitThis": true,
     "alwaysStrict": true,
     "declaration": true,
-    "baseUrl": "./",
     "esModuleInterop": true
   }
 }

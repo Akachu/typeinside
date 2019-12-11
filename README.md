@@ -1,6 +1,5 @@
 # typeinside
 
-
 ## Install
 
 - ``npm i typeinside --save``
@@ -37,7 +36,7 @@ for (let img of imgList) {
 
 ## License
 
-[MIT](https://naver.com)
+[MIT](https://github.com/Akachu/typeinside/blob/master/LICENSE)
 
 - - -
 
