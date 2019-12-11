@@ -44,13 +44,12 @@ export namespace post {
 		headers: Record<string, string> = HEADERS.API
 	): Promise<any> {
 		const { dataString, contentType } = makeMultipartData(data);
-		const formData = dataString;
 
 		headers["Content-Type"] = contentType;
 
 		const options = {
 			headers: headers,
-			data: formData
+			data: dataString
 		};
 
 		return request(RequestMethod.POST, url, options);

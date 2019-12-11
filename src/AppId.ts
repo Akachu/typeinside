@@ -32,7 +32,7 @@ async function getValueToken() {
 	return hash;
 }
 
-async function getAppId() {
+export async function getAppId() {
 	const valueToken = await getValueToken();
 	if (!valueToken) {
 		console.log("failed to get token");
@@ -63,30 +63,30 @@ async function getAppId() {
 	}
 }
 
-export default class AppId {
-	private static _session: AppId;
+// export default class AppId {
+// 	private static _session: AppId;
 
-	public static get session(): AppId {
-		if (!AppId._session) {
-			AppId._session = new AppId();
-		}
+// 	public static get session(): AppId {
+// 		if (!AppId._session) {
+// 			AppId._session = new AppId();
+// 		}
 
-		return AppId._session;
-	}
+// 		return AppId._session;
+// 	}
 
-	_value: string | undefined;
+// 	_value: string | undefined;
 
-	public async value() {
-		if (!this._value) {
-			await this.getNewAppId();
-		}
-		return this._value;
-	}
+// 	public async value() {
+// 		if (!this._value) {
+// 			await this.getNewAppId();
+// 		}
+// 		return this._value;
+// 	}
 
-	public async getNewAppId() {
-		let _appId = await getAppId();
-		if (!_appId) return null;
+// 	public async getNewAppId() {
+// 		let _appId = await getAppId();
+// 		if (!_appId) return null;
 
-		this._value = _appId;
-	}
-}
+// 		this._value = _appId;
+// 	}
+// }
