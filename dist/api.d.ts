@@ -6,25 +6,31 @@ export declare const HEADERS: {
         "User-Agent": string;
         "Referer": string;
         "Connection": string;
-        "Content-Type": string;
     };
     MOBILE: {
         "User-Agent": string;
         "Referer": string;
     };
     IMAGE: {
-        "Referer": string;
+        Referer: string;
     };
 };
 export declare const API: {
-    APP_CHECK: string;
-    APP_KEY_VERIFICATION: string;
-    MAJOR_GALLERY_LIST: string;
-    MINOR_GALLERY_LIST: string;
+    LOGIN: string;
+    APP: {
+        CHECK: string;
+        KEY_VERIFICATION: string;
+    };
+    GALLERY_LIST: {
+        MAJOR: string;
+        MINOR: string;
+    };
     REDIRECT: string;
     ARTICLE: {
         LIST: string;
         DETAIL: string;
         IMAGE: string;
+        WRITE: string;
+        DELETE: string;
     };
 };

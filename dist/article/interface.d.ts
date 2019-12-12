@@ -1,14 +1,14 @@
-interface NeighborArticle {
-    index: number;
-    title: string;
-}
-interface GalleryHeader {
+export interface GalleryHeader {
     index: number;
     name: string;
     level: number;
     selected: boolean;
 }
-interface Article {
+export interface NeighborArticle {
+    index: number;
+    title: string;
+}
+export interface Article {
     index: number;
     view: number;
     recommend: number;
@@ -28,7 +28,7 @@ interface Article {
     header: string;
     date: Date;
 }
-interface ArticleDetail extends Article {
+export interface ArticleDetail extends Article {
     recommendMember: number;
     unrecommend: number;
     recommendCaptcha: boolean;
@@ -43,12 +43,3 @@ interface ArticleDetail extends Article {
     isMinor: boolean;
     isNotice: boolean;
 }
-export declare function list(galleryId: string, appId: string, page?: number): Promise<Article[] | null>;
-export declare function detail(galleryId: string, appId: string, index: number): Promise<ArticleDetail | null>;
-export declare function lastIndex(galleryId: string, appId: string): Promise<number | null>;
-interface ImageUrl {
-    full: string;
-    resized: string;
-}
-export declare function image(galleryId: string, appId: string, index: number): Promise<Array<ImageUrl>>;
-export {};

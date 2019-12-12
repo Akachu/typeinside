@@ -1,5 +1,6 @@
 import { Transform } from "stream";
-import { request, RequestMethod } from "./request";
+import request from "./request";
+import { RequestMethod } from "./interface";
 import { HEADERS } from "../api";
 import fs from "fs";
 import http from "http";

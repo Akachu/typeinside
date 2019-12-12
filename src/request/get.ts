@@ -1,42 +1,35 @@
-import { request, RequestOptions, RequestMethod } from "./request";
+import request from "./request";
+import { RequestOptions, RequestMethod, RequestResult } from "./interface";
 import { makeQueryString } from "../tool";
-import AppId from "../AppId";
 import { API } from "../api";
 
-export function get(url: string, options: RequestOptions = {}): Promise<any> {
-	return request(RequestMethod.GET, url, {
-		headers: options.headers,
-		query: options.query
-	});
+export function get(
+  url: string,
+  options: RequestOptions = {}
+): Promise<RequestResult> {
+  return request(RequestMethod.GET, url, {
+    headers: options.headers,
+    query: options.query
+  });
 }
 
 export namespace get {
-	export async function withHash(
-		url: string,
-		options: RequestOptions = {}
-	): Promise<any> {
-		let { query } = options;
+  export async function withHash(
+    url: string,
+    options: RequestOptions = {}
+  ): Promise<RequestResult> {
+    let { query } = options;
 
-		if (query) {
-			let appId = await AppId.session.value();
-			if (!appId) return null;
+    if (query) {
+      url += `?${makeQueryString(query)}`;
+    }
 
-			query.app_id = appId;
-			url += `?${makeQueryString(query)}`;
-		}
+    let hash = Buffer.from(url).toString("base64");
 
-		let hash = Buffer.from(url).toString("base64");
+    url = `${API.REDIRECT}?hash=${hash}`;
 
-		url = `${API.REDIRECT}?hash=${hash}`;
+    let result = await get(url);
 
-		let data = await get(url);
-
-		if (data && data[0] && data[0].cause === "bad") {
-			await AppId.session.getNewAppId();
-
-			return await withHash(url, options);
-		}
-
-		return data;
-	}
+    return result;
+  }
 }

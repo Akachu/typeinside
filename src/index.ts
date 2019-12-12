@@ -1,25 +1,31 @@
 import * as article from "./article";
 import * as request from "./request";
+import { login } from "./auth";
+import { getAppId } from "./token";
 
-module.exports = {
+const Typeinside = {
   article,
-  request
+  request,
+  login,
+  getAppId
 };
 
-class typeinside {
-  public _appId!: string;
+module.exports = Typeinside;
 
-  async initialize(info?: AuthInfo): Promise<any> {
 
-	}
+/*
+(async () => {
+  let appId = await getAppId();
+  // let userId = loginResult.userInfo!.userId;
+  // console.log(userId);
+  setTimeout(async () => {
+    let wrr = await article.write(appId!, "api테스트", "집가고싶다");
+    console.log(wrr);
 
-	async login(info: AuthInfo) {
-		// if(!info) this._appId = await 
-	}
-}
-
-interface AuthInfo {
-  id: string;
-  pw: string;
-  isMember: boolean;
-}
+    setTimeout(async () => {
+      let wrr = await article.write(appId!, "api테스트2", "집가고싶다");
+      console.log(wrr);
+    }, 6000);
+  }, 6000);
+})();
+*/

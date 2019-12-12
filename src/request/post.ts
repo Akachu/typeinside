@@ -1,57 +1,60 @@
-import { HEADERS } from "../api";
+import { HEADERS, CONTENT_TYPE } from "../api";
 import { makeQueryString } from "../tool";
-import { request, RequestMethod } from "./request";
+import request from "./request";
+import { RequestMethod, RequestResult } from "./interface";
 
 function makeMultipartData(data: Record<string, string>) {
-	let boundary = Math.random()
-		.toFixed(4)
-		.substr(2);
+  let boundary = Math.random()
+    .toFixed(4)
+    .substr(2);
 
-	let dataString = "";
+  let dataString = "";
 
-	for (let key in data) {
-		dataString += `--${boundary}\nContent-Disposition: form-data; name="${key}"\n\n${data[key]}\n`;
-	}
+  for (let key in data) {
+    dataString += `--${boundary}\nContent-Disposition: form-data; name="${key}"\n\n${data[key]}\n`;
+  }
 
-	dataString += `--${boundary}--`;
+  dataString += `--${boundary}--`;
 
-	let contentType = `multipart/form-data; boundary=${boundary}`;
+  let contentType = `multipart/form-data; boundary=${boundary}`;
 
-	return { dataString, contentType };
+  return { dataString, contentType };
 }
 
 export function post(
-	url: string,
-	data: Record<string, string>,
-	headers: Record<string, string> = HEADERS.API
-): Promise<any> {
-	const formData: string = makeQueryString(data);
+  url: string,
+  data: Record<string, string>,
+  headers: Record<string, string> = HEADERS.API
+): Promise<RequestResult> {
+  const formData: string = makeQueryString(data);
 
-	headers["Content-Length"] = Buffer.byteLength(formData).toString();
+  const options = {
+    headers: {
+      ...headers,
+      "Content-Type": CONTENT_TYPE.DEFAULT,
+      "Content-Length": Buffer.byteLength(formData).toString()
+    },
+    data: formData
+  };
 
-	const options = {
-		headers: headers,
-		data: formData
-	};
-
-	return request(RequestMethod.POST, url, options);
+  return request(RequestMethod.POST, url, options);
 }
 
 export namespace post {
-	export function multipart(
-		url: string,
-		data: Record<string, string>,
-		headers: Record<string, string> = HEADERS.API
-	): Promise<any> {
-		const { dataString, contentType } = makeMultipartData(data);
+  export function multipart(
+    url: string,
+    data: Record<string, string>,
+    headers: Record<string, string> = HEADERS.API
+  ): Promise<RequestResult> {
+    const { dataString, contentType } = makeMultipartData(data);
+    const options = {
+      headers: {
+        ...headers,
+        "Content-Type": contentType
+      },
+      data: dataString
+    };
 
-		headers["Content-Type"] = contentType;
-
-		const options = {
-			headers: headers,
-			data: dataString
-		};
-
-		return request(RequestMethod.POST, url, options);
-	}
+    return request(RequestMethod.POST, url, options);
+  }
 }
