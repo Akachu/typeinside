@@ -11,6 +11,7 @@ export interface NeighborArticle {
 }
 
 export interface Article {
+  galleryId: string;
   index: number;
   view: number;
   recommend: number;

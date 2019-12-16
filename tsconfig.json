@@ -13,7 +13,7 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "declaration": true,
+    "declaration": false,
     "esModuleInterop": true
   }
 }

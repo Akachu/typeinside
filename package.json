@@ -2,16 +2,20 @@
   "name": "typeinside",
   "description": "promise-based dcinside unofficial api(wip) for personal use",
   "devDependencies": {
-    "@types/node": "^12.12.14"
+    "@types/node": "^12.12.14",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2"
   },
   "scripts": {
-    "start": "tsc && node ./dist/"
+    "start": "tsc && node ./dist/",
+    "build": "tsc",
+    "test": "tsc && mocha --reporter spec"
   },
   "license": "MIT",
   "author": "marscop <marscop7@gmail.com>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "repository": {
     "type": "git",
     "url": "https://github.com/Akachu/typeinside.git"

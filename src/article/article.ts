@@ -15,7 +15,10 @@ export async function list(galleryId: string, appId: string, page = 1) {
   let data = getResultData(result);
   if (data) {
     let gallList: Array<any> = data.gall_list;
-    return gallList.map(d => parseArticleData(d));
+    return gallList.map(article => {
+      article.galleryId = galleryId
+      return parseArticleData(article);
+    });
   } else {
     return null;
   }

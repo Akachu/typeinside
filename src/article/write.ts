@@ -1,6 +1,10 @@
 import { API } from "../api";
 import { post } from "../request";
 
+interface articleWriteForm {
+  // gallery
+}
+
 export async function write(
   appId: string,
   title: string,

@@ -25,6 +25,7 @@ export function parseDateString(data: string) {
 
 export function parseArticleData(data: any) {
   let parsed: Article = {
+    galleryId: data.galleryId,
     index: parseInt(data.no),
     view: parseInt(data.hit),
     recommend: parseInt(data.recommend),

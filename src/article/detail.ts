@@ -20,7 +20,7 @@ export async function detail(
   let data = getResultData(result);
 
   if (data) {
-    let viewData = { ...data.view_info, ...data.view_main };
+    let viewData = { ...data.view_info, ...data.view_main, galleryId };
     return parseArticleDetailData(viewData);
   } else {
     return null;

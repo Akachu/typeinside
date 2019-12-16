@@ -9,6 +9,7 @@ export interface NeighborArticle {
     title: string;
 }
 export interface Article {
+    galleryId: string;
     index: number;
     view: number;
     recommend: number;
