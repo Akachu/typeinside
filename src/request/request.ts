@@ -66,8 +66,7 @@ export default async function request(
 
       try {
         parsedData = JSON.parse(responseData);
-
-        if (parsedData[0] && !parsedData[0].result) {
+        if (parsedData[0] && parsedData[0].result === false) {
           return {
             success: false,
             headers,

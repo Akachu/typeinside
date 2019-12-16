@@ -8,23 +8,15 @@ export async function write(
   userId?: string
 ) {
   let data: any = {
+    "id": "kancolle",
     "app_id": appId,
     "mode": "write",
-    "name": "test", //유동
-    "password": "testpassword", //유동비번
-    "id": "kancolle",
+    // "client_token": "vPW1USVeVvCK2cX1rULUS4I0KYDGtbwPjCeirZtqrsX_7gLrVlx4wNIPsiF4EDREDEfDNEtSQSv71YHDjev2vL4bp9SinNi-j3AK4V8B1sB9NqznqTC",
     "subject": title,
-    "client_token": "N",
-    content: "test",
+    "name": "oo", //유동
+    "password": "oo", //유동비번
     "memo_block[0]": body
   };
-
-  if (userId) {
-    // data.user_id = userId;
-  } else {
-    // data.name = "ㅇㅇ";
-    // data.password = "superpassword";
-  }
-
+  // let awa = "http://upload.dcinside.com/_app_write_api.php";
   return post.multipart(API.ARTICLE.WRITE, data);
 }
