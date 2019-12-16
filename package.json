@@ -4,12 +4,16 @@
   "devDependencies": {
     "@types/node": "^12.12.14",
     "chai": "^4.2.0",
-    "mocha": "^6.2.2"
+    "coveralls": "^3.0.9",
+    "istanbul": "^0.4.5",
+    "mocha": "^6.2.2",
+    "typescript": "^3.7.3"
   },
   "scripts": {
     "start": "tsc && node ./dist/",
     "build": "tsc",
-    "test": "tsc && mocha --reporter spec"
+    "test": "tsc && mocha --reporter spec",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha test/*.js -- -R spec"
   },
   "license": "MIT",
   "author": "marscop <marscop7@gmail.com>",

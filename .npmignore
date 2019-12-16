@@ -1,2 +1,5 @@
-*.ts
 !*.d.ts
+.travis.yml
+.gitiggnore
+test/
+src/
