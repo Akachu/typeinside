@@ -30,7 +30,7 @@ describe("Typeinside run test", () => {
   it("download image", async () => {
     let appId = await dc.getAppId();
     let imgUrls = await dc.article.image("cat", appId, 1193238);
-    let fullUrl = imgUrls[0].full;
+    let fullUrl = imgUrls[0].resized;
     let result = await dc.request.image(fullUrl);
     expect(result).to.not.null;
   });

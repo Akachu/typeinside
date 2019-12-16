@@ -12,8 +12,8 @@
   "scripts": {
     "start": "tsc && node ./dist/",
     "build": "tsc",
-    "test": "tsc && mocha --timeout 10000 --reporter spec",
-    "cover": "tsc && istanbul cover node_modules/mocha/bin/_mocha test/*.js -- --timeout 10000 -R spec"
+    "test": "tsc && mocha --timeout 30000 --reporter spec",
+    "cover": "tsc && istanbul cover node_modules/mocha/bin/_mocha test/*.js -- --timeout 30000 -R spec"
   },
   "license": "MIT",
   "author": "marscop <marscop7@gmail.com>",
