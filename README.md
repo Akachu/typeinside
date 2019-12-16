@@ -9,10 +9,12 @@
 ### get article data
 
 ```ts
-import { article, request } from('typeinside');
+import { article, request, getAppId } from('typeinside');
+
+let appId = await getAppId();
 
 /** @returns Array<Article> */
-let articleList = await article.list(galleryName);
+let articleList = await article.list(galleryName, appId!);
 ```
 
 ### download image
@@ -20,8 +22,8 @@ let articleList = await article.list(galleryName);
 ```ts
 const galleryName = 'cat';
 
-let index = await article.lastIndex(galleryName);
-let imgList = await article.image(galleryName, index!);
+let index = await article.lastIndex(galleryName, appId!);
+let imgList = await article.image(galleryName, appId!, index!);
 
 for (let img of imgList) {
   

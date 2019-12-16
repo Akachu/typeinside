@@ -38,11 +38,11 @@ export function parseArticleData(data: any) {
     voiceComment: data.voice_chk !== "N" ? parseInt(data.total_voice) : 0,
     isWinnerta: data.winnerta_icon === "Y",
     name: data.name,
-    userId: data.user_id,
+    userId: data.user_id || null,
     ip: data.ip !== "" ? data.ip : null,
     memberIcon: parseInt(data.member_icon),
     title: data.subject,
-    header: data.head_text,
+    header: data.headtitle || null,
     date: parseDateString(data.date_time)
   };
 
@@ -63,14 +63,18 @@ export function parseBodyData(data: string) {
 export function parseArticleDetailData(data: any) {
   let article = parseArticleData(data);
 
-  let headers: Array<GalleryHeader> = data.head_text.map(
-    (ht: any): GalleryHeader => ({
-      index: parseInt(ht.no),
-      name: ht.name,
-      level: parseInt(ht.level),
-      selected: ht.selected
-    })
-  );
+  let headers: Array<GalleryHeader> = [];
+
+  if (data.head_text) {
+    headers = data.head_text.map(
+      (ht: any): GalleryHeader => ({
+        index: parseInt(ht.no),
+        name: ht.name,
+        level: parseInt(ht.level),
+        selected: ht.selected
+      })
+    );
+  }
 
   let hasCaptcha = false;
   let captchaType = null;
@@ -94,7 +98,7 @@ export function parseArticleDetailData(data: any) {
     next: { index: parseInt(data.next_link), title: data.next_subject },
     prev: { index: parseInt(data.prev_link), title: data.prev_subject },
     galleryHeaders: headers,
-    isMinor: data.is_minor,
+    isMinor: data.is_minor || false,
     isNotice: data.isNotice === "Y"
   };
 
