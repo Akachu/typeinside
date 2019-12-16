@@ -1,4 +1,4 @@
-# typeinside
+# typeinside [![Build Status](https://travis-ci.com/Akachu/typeinside.svg?branch=master)](https://travis-ci.com/Akachu/typeinside) [![Coverage Status](https://coveralls.io/repos/github/Akachu/typeinside/badge.svg?branch=master)](https://coveralls.io/github/Akachu/typeinside?branch=master)
 
 ## Install
 
