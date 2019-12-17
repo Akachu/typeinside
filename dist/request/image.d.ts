@@ -6,5 +6,5 @@ interface ImageData {
     data: Transform;
     size: number;
 }
-export declare function image(url: string, savePath?: string): Promise<ImageData | null>;
+export declare function image(url: string, savePath?: string): Promise<ImageData>;
 export {};

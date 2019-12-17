@@ -12,7 +12,7 @@ export declare const HEADERS: {
         "Referer": string;
     };
     IMAGE: {
-        Referer: string;
+        "Referer": string;
     };
 };
 export declare const API: {

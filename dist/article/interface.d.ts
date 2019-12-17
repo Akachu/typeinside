@@ -44,3 +44,23 @@ export interface ArticleDetail extends Article {
     isMinor: boolean;
     isNotice: boolean;
 }
+export interface Guest {
+    name: string;
+    password: string;
+}
+export interface Member {
+    userId: string;
+}
+export declare function isGuest(data: any): data is Guest;
+export declare function isMember(data: any): data is Member;
+export interface ArticleWriteForm {
+    galleryId: string;
+    title: string;
+    body: string;
+    clientToken?: string;
+}
+export interface ArticleDeleteForm {
+    galleryId: string;
+    index: string;
+    clientToken?: string;
+}

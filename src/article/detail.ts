@@ -7,7 +7,7 @@ export async function detail(
   galleryId: string,
   appId: string,
   index: number
-): Promise<ArticleDetail | null> {
+): Promise<ArticleDetail> {
   let options = {
     query: {
       no: index.toString(),
@@ -23,6 +23,6 @@ export async function detail(
     let viewData = { ...data.view_info, ...data.view_main, galleryId };
     return parseArticleDetailData(viewData);
   } else {
-    return null;
+    throw new Error("failed to get article detail data");
   }
 }

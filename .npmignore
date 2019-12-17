@@ -1,5 +1,9 @@
+*.ts
 !*.d.ts
+*.log
 .travis.yml
 .gitiggnore
+node_modules/
 test/
 src/
+coverage/

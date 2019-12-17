@@ -28,7 +28,9 @@ export async function image(
       full: item.img,
       resized: item.img_clone
     }));
-  } else {
+  } else if (result.success) {
     return [];
+  } else {
+    throw new Error("failed to get article image urls");
   }
 }

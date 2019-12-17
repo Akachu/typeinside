@@ -16,16 +16,16 @@ export async function list(galleryId: string, appId: string, page = 1) {
   if (data) {
     let gallList: Array<any> = data.gall_list;
     return gallList.map(article => {
-      article.galleryId = galleryId
+      article.galleryId = galleryId;
       return parseArticleData(article);
     });
   } else {
-    return null;
+    throw new Error("failed to get article data");
   }
 }
 
 export async function lastIndex(galleryId: string, appId: string) {
   let articleList = await list(galleryId, appId, 1);
-  if (!articleList) return null;
+  if (!articleList) throw new Error("failed to get gallery info");
   return articleList[0].index;
 }

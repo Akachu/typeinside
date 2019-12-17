@@ -15,7 +15,7 @@ interface ImageData {
 export async function image(
   url: string,
   savePath?: string
-): Promise<ImageData | null> {
+): Promise<ImageData> {
   let imageStream: Transform = new Transform();
   let fileName: string;
   let extension: string;
@@ -35,7 +35,7 @@ export async function image(
   let size = headers["content-length"];
 
   if (!disposition || !contentType || !size) {
-    return null;
+    throw new Error("failed to get image data");
   }
 
   fileName = disposition!.split("filename=")[1];

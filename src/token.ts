@@ -10,8 +10,7 @@ async function getDate() {
     let date: string = data.date;
     return date;
   } else {
-    console.error("can't get date");
-    return null;
+    throw new Error("can't get date");
   }
 }
 
@@ -19,8 +18,7 @@ async function getValueToken() {
   const date = await getDate();
 
   if (!date) {
-    console.log("failed to generate value token");
-    return null;
+    throw new Error("failed to generate value token");
   }
 
   const food = "dcArdchk_" + date;
@@ -33,11 +31,18 @@ async function getValueToken() {
   return hash;
 }
 
+/**
+ * 일부 요청시에 사용되는 appId를 발급 받습니다
+ * 
+ * 발급된 appId는 12시간 뒤 만료 됩니다
+ *
+ * @export
+ * @returns appId
+ */
 export async function getAppId() {
   const valueToken = await getValueToken();
   if (!valueToken) {
-    console.log("failed to get token");
-    return null;
+    throw new Error("failed to get token");
   }
 
   const formData = {
@@ -54,11 +59,9 @@ export async function getAppId() {
       let appId: string = data.app_id;
       return appId;
     } else {
-      return null;
+      throw new Error("failed to verify token");
     }
   } catch (err) {
-    console.error(err);
-    console.log("failed to get token");
-    return null;
+    throw err;
   }
 }

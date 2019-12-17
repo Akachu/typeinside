@@ -3,11 +3,11 @@ import * as request from "./request";
 import { login } from "./auth";
 import { getAppId } from "./token";
 
-const Typeinside = {
+const typeinside = {
   article,
   request,
   login,
   getAppId
 };
 
-module.exports = Typeinside;
+module.exports = typeinside;

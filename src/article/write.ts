@@ -1,26 +1,38 @@
 import { API } from "../api";
 import { post } from "../request";
+import {
+  Guest,
+  Member,
+  ArticleWriteForm,
+  isGuest,
+  isMember
+} from "./interface";
 
-interface articleWriteForm {
-  // gallery
-}
-
-export async function write(
+export async function write<T extends Guest | Member>(
   appId: string,
-  title: string,
-  body: string,
-  userId?: string
-) {
+  form: ArticleWriteForm & T
+): Promise<number> {
   let data: any = {
-    "id": "kancolle",
-    "app_id": appId,
-    "mode": "write",
-    // "client_token": "vPW1USVeVvCK2cX1rULUS4I0KYDGtbwPjCeirZtqrsX_7gLrVlx4wNIPsiF4EDREDEfDNEtSQSv71YHDjev2vL4bp9SinNi-j3AK4V8B1sB9NqznqTC",
-    "subject": title,
-    "name": "oo", //유동
-    "password": "oo", //유동비번
-    "memo_block[0]": body
+    id: form.galleryId,
+    app_id: appId,
+    mode: "write",
+    client_token: form.clientToken || "N",
+    subject: form.title
   };
-  // let awa = "http://upload.dcinside.com/_app_write_api.php";
-  return post.multipart(API.ARTICLE.WRITE, data);
+
+  if (isGuest(form)) {
+    data.name = form.name;
+    data.password = form.password;
+  } else if (isMember(form)) {
+    data.user_id = form.userId;
+  }
+
+  data["memo_block[0]"] = form.body;
+
+  let result = await post.multipart(API.ARTICLE.WRITE, data);
+  if (result.success && result.data && result.data.cause) {
+    return parseInt(result.data.cause);
+  } else {
+    throw new Error("failed to write article");
+  }
 }

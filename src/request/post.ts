@@ -5,17 +5,23 @@ import { RequestMethod, RequestResult } from "./interface";
 
 function makeMultipartData(data: Record<string, string>) {
   let boundary = Math.random()
-    .toFixed(4)
+    .toFixed(12)
     .substr(2);
 
   let dataString = "";
 
   for (let key in data) {
-    dataString += `--${boundary}\nContent-Disposition: form-data; name="${key}"\n\n${data[key]}\n`;
+    let value = encodeURI(data[key] + '');
+    let length = Buffer.from(value, "utf8").byteLength;
+    dataString +=
+      `--${boundary}\n` +
+      `Content-Disposition: form-data; name="${key}"\n` +
+      `Content-Length: ${length}\n` +
+      `\n${value}\n`;
   }
-
+  
   dataString += `--${boundary}--`;
-
+  
   let contentType = `multipart/form-data; boundary=${boundary}`;
 
   return { dataString, contentType };
