@@ -21,7 +21,8 @@ export const API = {
   LOGIN: "https://dcid.dcinside.com/join/mobile_app_login.php",
   APP: {
     CHECK: "http://json2.dcinside.com/json0/app_check_A_rina.php",
-    KEY_VERIFICATION: "https://dcid.dcinside.com/join/mobile_app_key_verification_3rd.php"
+    KEY_VERIFICATION: "https://dcid.dcinside.com/join/mobile_app_key_verification_3rd.php",
+    CODE: "http://app.dcinside.com/code.php"
   },
   GALLERY_LIST: {
     MAJOR: "http://json.dcinside.com/App/gall_name.php",

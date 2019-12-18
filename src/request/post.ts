@@ -2,6 +2,7 @@ import { HEADERS, CONTENT_TYPE } from "../api";
 import { makeQueryString } from "../tool";
 import request from "./request";
 import { RequestMethod, RequestResult } from "./interface";
+import { parse as parseUrl } from "url";
 
 function makeMultipartData(data: Record<string, string>) {
   let boundary = Math.random()
@@ -11,20 +12,32 @@ function makeMultipartData(data: Record<string, string>) {
   let dataString = "";
 
   for (let key in data) {
-    let value = encodeURI(data[key] + '');
-    let length = Buffer.from(value, "utf8").byteLength;
+    let value = data[key].toString();
+    if (key.match(/memo_block\[\d+\]/) || key === "subject") {
+      value = encodeURIComponent(value);
+      value = value.replace(/%20/g, "+");
+    } else {
+      value = encodeURI(value);
+    }
+
+    let length = Buffer.from(value).byteLength;
     dataString +=
       `--${boundary}\n` +
       `Content-Disposition: form-data; name="${key}"\n` +
       `Content-Length: ${length}\n` +
       `\n${value}\n`;
   }
-  
+
   dataString += `--${boundary}--`;
   
   let contentType = `multipart/form-data; boundary=${boundary}`;
+  let contentLength = Buffer.from(dataString).byteLength;
+  let multipartHeaders = {
+    "Content-Type": contentType,
+    "Content-Length": contentLength.toString()
+  };
 
-  return { dataString, contentType };
+  return { dataString, multipartHeaders };
 }
 
 export function post(
@@ -52,11 +65,12 @@ export namespace post {
     data: Record<string, string>,
     headers: Record<string, string> = HEADERS.API
   ): Promise<RequestResult> {
-    const { dataString, contentType } = makeMultipartData(data);
+    const { dataString, multipartHeaders } = makeMultipartData(data);
     const options = {
       headers: {
         ...headers,
-        "Content-Type": contentType
+        ...multipartHeaders,
+        Host: parseUrl(url).host!
       },
       data: dataString
     };

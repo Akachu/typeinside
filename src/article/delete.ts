@@ -26,9 +26,15 @@ async function del<T extends Guest | Member>(
     data.user_id = form.userId;
   }
 
-  let requset = await post.multipart(API.ARTICLE.DELETE, data);
+  let result = await post.multipart(API.ARTICLE.DELETE, data);
 
-  if (!requset.success) throw new Error("Failed to delete article");
+  if (!result.success) {
+    if (result.reason) {
+      throw new Error(result.reason);
+    } else {
+      throw new Error("Failed to delete article");
+    }
+  }
 }
 
 export { del as delete };

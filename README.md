@@ -40,8 +40,6 @@ for (let img of imgList) {
 
 [MIT](https://github.com/Akachu/typeinside/blob/master/LICENSE)
 
-- - -
-
 ## other languages
 
 - [goinside](https://github.com/geeksbaek/goinside)

@@ -1,5 +1,5 @@
 import { API } from "../api";
-import { post } from "../request";
+import { post, getResultData } from "../request";
 import {
   Guest,
   Member,
@@ -26,12 +26,19 @@ export async function write<T extends Guest | Member>(
   } else if (isMember(form)) {
     data.user_id = form.userId;
   }
+  let bodyList = form.body.split("\n");
 
-  data["memo_block[0]"] = form.body;
+  for(let i = 0; i < bodyList.length; i ++) {
+    data[`memo_block[${i}]`] = `<div>${bodyList[i]} </div>`
+  }
 
   let result = await post.multipart(API.ARTICLE.WRITE, data);
-  if (result.success && result.data && result.data.cause) {
-    return parseInt(result.data.cause);
+  let resultData = getResultData(result);
+
+  if (resultData) {
+    return parseInt(resultData.cause);
+  } else if (result.reason) {
+    throw new Error(result.reason);
   } else {
     throw new Error("failed to write article");
   }

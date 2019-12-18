@@ -16,7 +16,7 @@
     "cover": "tsc && istanbul cover node_modules/mocha/bin/_mocha test/*.js -- --timeout 30000 -R spec"
   },
   "license": "MIT",
-  "author": "marscop <marscop7@gmail.com>",
+  "author": "Akachu <marscop7@gmail.com>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "version": "0.0.10",

@@ -20,7 +20,8 @@ export default async function request(
     headers
   };
 
-  let protocol = parseUrl(url).protocol === "http:" ? http : https;
+  let parsedUrl = parseUrl(url);
+  let protocol = parsedUrl.protocol === "http:" ? http : https;
 
   if (query) url += `?${makeQueryString(query)}`;
 

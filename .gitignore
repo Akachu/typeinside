@@ -2,3 +2,4 @@ node_modules/
 dist/**/*.js
 *.log
 coverage/
+yarn.lock

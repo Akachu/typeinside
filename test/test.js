@@ -4,7 +4,9 @@ const dc = require("../dist/index.js");
 
 const galleryId = "cat";
 const articleIndex = 1193238;
-const clientToken = '_lbrU60AFZdj11vEMS2GjUHBzOVTYxUUVmmIeVp9z0WyHsO8SoX4L7Y8YRTFYIqAXyjRu0';
+const clientToken = process.env.dcApiClientToken;
+const memberId = process.env.dcApiMemberId;
+const memberPw = process.env.dcApiMemberPw;
 
 function delay(ms) {
   return new Promise((resolve) => {
@@ -52,10 +54,10 @@ describe("Typeinside run test", () => {
     await delay(5000);
   });
 
-  let writeTestGalleryId = 'programming';
+  let writeTestGalleryId = 'kancolle';
   let tempArticleIndex;
 
-  it('write article', async () => {
+  it('write article with guest account', async () => {
     let result = await dc.article.write(appId, {
       galleryId: writeTestGalleryId,
       title: 'api 테스트',
@@ -77,4 +79,38 @@ describe("Typeinside run test", () => {
       clientToken
     });
   });
+
+  let userId;
+
+  it('login with member account', async () => {
+    let loginResult = await dc.login(memberId, memberPw);
+    expect(loginResult.success).to.true;
+    userId = loginResult.userInfo.userId;
+  });
+
+  /*
+
+  it('write article with member account', async () => {
+    let result = await dc.article.write(appId, {
+      galleryId: writeTestGalleryId,
+      title: 'api 테스트',
+      body: '고닉 테스트',
+      userId,
+      clientToken
+    });
+
+    expect(result).to.not.null;
+    tempArticleIndex = result;
+  });
+
+  it('delete article again', async () => {
+    await dc.article.delete(appId, {
+      galleryId: writeTestGalleryId,
+      index: tempArticleIndex,
+      userId,
+      clientToken
+    });
+  });
+
+  */
 });
