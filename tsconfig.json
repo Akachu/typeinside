@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
     "sourceMap": false,
     "outDir": "./dist",
     "rootDir": "./src",
@@ -13,7 +12,9 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "declaration": false,
+    "declaration": true,
     "esModuleInterop": true
-  }
+  },
+  "exclude": ["./test"],
+  "include": ["./src"]
 }

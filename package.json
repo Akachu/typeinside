@@ -2,18 +2,19 @@
   "name": "typeinside",
   "description": "promise-based dcinside unofficial api(wip) for personal use",
   "devDependencies": {
+    "@types/chai": "^4.2.7",
+    "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.14",
     "chai": "^4.2.0",
-    "coveralls": "^3.0.9",
-    "istanbul": "^0.4.5",
     "mocha": "^6.2.2",
+    "nyc": "^14.1.1",
+    "ts-node": "^8.5.4",
     "typescript": "^3.7.3"
   },
   "scripts": {
-    "start": "tsc && node ./dist/",
+    "start": "ts-node ./src/",
     "build": "tsc",
-    "test": "tsc && mocha --timeout 30000 --reporter spec",
-    "cover": "tsc && istanbul cover node_modules/mocha/bin/_mocha test/*.js -- --timeout 30000 -R spec"
+    "test": "nyc mocha"
   },
   "license": "MIT",
   "author": "Akachu <marscop7@gmail.com>",

@@ -53,6 +53,10 @@ export interface Guest {
   password: string;
 }
 
+export interface GuestPassword {
+  password: string;
+}
+
 export interface Member {
   userId: string;
 }

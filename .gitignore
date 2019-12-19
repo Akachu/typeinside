@@ -1,5 +1,6 @@
 node_modules/
-dist/**/*.js
+dist/
+.nyc_output/
 *.log
 coverage/
 yarn.lock

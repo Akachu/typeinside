@@ -1,9 +1,11 @@
-*.ts
-!*.d.ts
 *.log
-.travis.yml
+yarn.lock
 .gitiggnore
+.nycrc.json
+.mocharc.json
+.travis.yml
 node_modules/
 test/
 src/
+.nyc_output/
 coverage/

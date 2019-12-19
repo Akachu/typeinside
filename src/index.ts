@@ -10,4 +10,4 @@ const typeinside = {
   getAppId
 };
 
-module.exports = typeinside;
+export = typeinside;

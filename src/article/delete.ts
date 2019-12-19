@@ -1,5 +1,5 @@
 import {
-  Guest,
+  GuestPassword,
   Member,
   isGuest,
   isMember,
@@ -8,7 +8,7 @@ import {
 import { post } from "../request";
 import { API } from "../api";
 
-async function del<T extends Guest | Member>(
+async function del<T extends GuestPassword | Member>(
   appId: string,
   form: ArticleDeleteForm & T
 ) {
