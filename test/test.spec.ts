@@ -18,7 +18,7 @@ describe("Typeinside run test", () => {
   let appId: string;
 
   it("generate app id", async () => {
-    let result = await dc.getAppId();
+    let result = await dc.getAppId(clientToken);
     expect(result).to.not.null;
     appId = result;
   });
@@ -74,13 +74,13 @@ describe("Typeinside run test", () => {
   it("delete article", async () => {
     await dc.article.delete(appId, {
       galleryId: writeTestGalleryId,
-      index: tempArticleIndex.toString(),
+      index: tempArticleIndex,
       password: "123456",
       clientToken
     });
   });
 
-  let userId;
+  let userId: string;
 
   it("login with member account", async () => {
     let loginResult = await dc.login(memberId, memberPw);
@@ -89,8 +89,7 @@ describe("Typeinside run test", () => {
   });
 
   /*
-
-  it('write article with member account', async () => {
+  it("write article with member account", async () => {
     let result = await dc.article.write(appId, {
       galleryId: writeTestGalleryId,
       title: 'api 테스트',
@@ -103,7 +102,7 @@ describe("Typeinside run test", () => {
     tempArticleIndex = result;
   });
 
-  it('delete article again', async () => {
+  it("delete article again", async () => {
     await dc.article.delete(appId, {
       galleryId: writeTestGalleryId,
       index: tempArticleIndex,
@@ -111,6 +110,5 @@ describe("Typeinside run test", () => {
       clientToken
     });
   });
-
   */
 });

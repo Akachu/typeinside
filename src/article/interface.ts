@@ -73,11 +73,11 @@ export interface ArticleWriteForm {
   galleryId: string;
   title: string;
   body: string;
-  clientToken?: string;
+  clientToken: string;
 }
 
 export interface ArticleDeleteForm {
   galleryId: string;
-  index: string;
-  clientToken?: string;
+  index: number;
+  clientToken: string;
 }

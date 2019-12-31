@@ -16,7 +16,7 @@ export async function write<T extends Guest | Member>(
     id: form.galleryId,
     app_id: appId,
     mode: "write",
-    client_token: form.clientToken || "N",
+    client_token: form.clientToken,
     subject: form.title
   };
 

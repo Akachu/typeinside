@@ -13,11 +13,11 @@ async function del<T extends GuestPassword | Member>(
   form: ArticleDeleteForm & T
 ) {
   let data: any = {
+    app_id: appId,
     client_token: form.clientToken || "N",
     id: form.galleryId,
-    no: form.index,
     mode: "board_del",
-    app_id: appId
+    no: form.index,
   };
 
   if (isGuest(form)) {
@@ -27,7 +27,7 @@ async function del<T extends GuestPassword | Member>(
   }
 
   let result = await post.multipart(API.ARTICLE.DELETE, data);
-
+  
   if (!result.success) {
     if (result.reason) {
       throw new Error(result.reason);

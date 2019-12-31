@@ -1,8 +1,6 @@
 import { API } from "../api";
 import { post, getResultData } from "../request";
 
-function parseLoginResult(data: any) {}
-
 export interface LoginResult {
   success: boolean;
   reason?: string;

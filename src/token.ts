@@ -39,16 +39,16 @@ async function getValueToken() {
  * @export
  * @returns appId
  */
-export async function getAppId() {
+export async function getAppId(clientToken: string) {
   const valueToken = await getValueToken();
   if (!valueToken) {
     throw new Error("failed to get token");
   }
 
   const formData = {
+    client_token: clientToken,
     value_token: valueToken,
     signature: "ReOo4u96nnv8Njd7707KpYiIVYQ3FlcKHDJE046Pg6s=",
-    pkg: "com.dcinside.app"
   };
 
   try {
