@@ -1,6 +1,11 @@
 import crypto from "crypto";
 import { get, post, getResultData } from "./request";
-import { API } from "./api";
+import { API, SIGNATURE } from "./api";
+import { makeRandomString as rs } from "./tool";
+
+export function getRandomClientToken() {
+  return `${rs(11)}:${rs(139)}`;
+}
 
 async function getDate() {
   let result = await get(API.APP.CHECK);
@@ -33,22 +38,24 @@ async function getValueToken() {
 
 /**
  * 일부 요청시에 사용되는 appId를 발급 받습니다
- * 
+ *
  * 발급된 appId는 12시간 뒤 만료 됩니다
  *
  * @export
  * @returns appId
  */
-export async function getAppId(clientToken: string) {
+export async function getAppId(clientToken?: string) {
   const valueToken = await getValueToken();
   if (!valueToken) {
     throw new Error("failed to get token");
   }
 
+  if (!clientToken) clientToken = getRandomClientToken();
+
   const formData = {
     client_token: clientToken,
     value_token: valueToken,
-    signature: "ReOo4u96nnv8Njd7707KpYiIVYQ3FlcKHDJE046Pg6s=",
+    signature: SIGNATURE
   };
 
   try {

@@ -18,7 +18,7 @@ describe("Typeinside run test", () => {
   let appId: string;
 
   it("generate app id", async () => {
-    let result = await dc.getAppId(clientToken);
+    let result = await dc.getAppId();
     expect(result).to.not.null;
     appId = result;
   });

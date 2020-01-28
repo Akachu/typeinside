@@ -11,9 +11,7 @@
 ```ts
 import { article, request, getAppId } from('typeinside');
 
-const clientToken = '...'; // FCM TOKEN
-
-const appId = await getAppId(clientToken);
+const appId = await getAppId();
 
 /** @returns Array<Article> */
 let articleList = await article.list(galleryName, appId);
@@ -37,13 +35,6 @@ for (let img of imgList) {
 
 }
 ```
-
-### FCM TOKEN
-
-[Generator](https://ts-dc-rest-api.web.app/)
-
-- allow notification permission to work properly
-- cannot write/delete article
 
 ## License
 

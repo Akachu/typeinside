@@ -14,7 +14,7 @@ async function del<T extends GuestPassword | Member>(
 ) {
   let data: any = {
     app_id: appId,
-    client_token: form.clientToken || "N",
+    client_token: form.clientToken,
     id: form.galleryId,
     mode: "board_del",
     no: form.index,
