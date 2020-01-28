@@ -14,7 +14,11 @@ interface ImageData {
 
 export async function image(
   url: string,
-  savePath?: string
+  handler?: (
+    imageStream: Transform,
+    fileName: string,
+    extension: string
+  ) => void
 ): Promise<ImageData> {
   let imageStream: Transform = new Transform();
   let fileName: string;
@@ -43,24 +47,13 @@ export async function image(
 
   res.on("data", chunk => imageStream.push(chunk));
 
-  let end = new Promise(resolve => res.on("end", resolve));
-
-  if (savePath) {
-    let random = Math.random()
-      .toFixed(5)
-      .substr(2);
-
-    let filePath = `${savePath}/${fileName}_${random}.${extension}`;
-    let writeStream = fs.createWriteStream(filePath + "_saving");
-    imageStream.pipe(writeStream);
-    await end;
-    imageStream.end();
-    await new Promise(resolve => writeStream.on("close", resolve));
-    writeStream.end();
-    fs.renameSync(filePath + "_saving", filePath);
-  } else {
-    await end;
+  if (handler) {
+    handler(imageStream, fileName, extension);
   }
+
+  await new Promise(resolve => res.on("end", resolve));
+
+  imageStream.end();
 
   let imageData: ImageData = {
     fileName,
@@ -70,4 +63,27 @@ export async function image(
   };
 
   return imageData;
+}
+
+export namespace image {
+  export async function save(url: string, savePath: string) {
+    let random = Math.random()
+      .toFixed(5)
+      .substr(2);
+
+    await new Promise(async (resolve, reject) => {
+      image(url, async (imageStream, name, extension) => {
+        let fileFullName = `${name}_${random}.${extension}`;
+        let filePath = `${savePath}/${fileFullName}`;
+        let writeStream = fs.createWriteStream(filePath + "_saving");
+
+        imageStream.pipe(writeStream);
+
+        await new Promise(resolve => writeStream.on("close", resolve));
+        writeStream.end();
+        fs.renameSync(filePath + "_saving", filePath);
+        resolve();
+      });
+    });
+  }
 }

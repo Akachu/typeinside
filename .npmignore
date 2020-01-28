@@ -9,3 +9,5 @@ test/
 src/
 .nyc_output/
 coverage/
+.github/
+tsconfig.json

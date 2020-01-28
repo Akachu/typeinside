@@ -37,5 +37,10 @@ export const API = {
     IMAGE: "http://m.dcinside.com/api/view_img.php",
     WRITE: "http://upload.dcinside.com/_app_write_api.php",
     DELETE: "http://m.dcinside.com/api/gall_del.php"
+  },
+  COMMENT: {
+    LIST: "http://m.dcinside.com/api/comment_new.php",
+    WRITE: "http://m.dcinside.com/api/comment_ok.php",
+    DELETE: "http://m.dcinside.com/api/comment_del.php"
   }
 };

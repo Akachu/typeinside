@@ -31,7 +31,7 @@ for (let img of imgList) {
   await request.image(img.full);
 
   // or download directly
-  await request.image(img.full, './catImages/');
+  await request.image.save(img.full, './catImages/');
 
 }
 ```
