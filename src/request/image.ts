@@ -12,14 +12,7 @@ interface ImageData {
   size: number;
 }
 
-export async function image(
-  url: string,
-  handler?: (
-    imageStream: Transform,
-    fileName: string,
-    extension: string
-  ) => void
-): Promise<ImageData> {
+export async function image(url: string): Promise<ImageData> {
   let imageStream: Transform = new Transform();
   let fileName: string;
   let extension: string;
@@ -46,14 +39,9 @@ export async function image(
   extension = contentType!.split("image/")[1].toLowerCase();
 
   res.on("data", chunk => imageStream.push(chunk));
-
-  if (handler) {
-    handler(imageStream, fileName, extension);
-  }
-
-  await new Promise(resolve => res.on("end", resolve));
-
-  imageStream.end();
+  res.on("end", () => {
+    imageStream.end();
+  });
 
   let imageData: ImageData = {
     fileName,
@@ -66,24 +54,28 @@ export async function image(
 }
 
 export namespace image {
-  export async function save(url: string, savePath: string) {
-    let random = Math.random()
-      .toFixed(5)
-      .substr(2);
+  export async function save(url: string, savePath: string, fileName?: string) {
+    let imgData: ImageData = await image(url);
 
-    await new Promise(async (resolve, reject) => {
-      image(url, async (imageStream, name, extension) => {
-        let fileFullName = `${name}_${random}.${extension}`;
-        let filePath = `${savePath}/${fileFullName}`;
-        let writeStream = fs.createWriteStream(filePath + "_saving");
+    if (!fileName) {
+      let random = Math.random()
+        .toFixed(5)
+        .substr(2);
 
-        imageStream.pipe(writeStream);
+      fileName = `${imgData.fileName}_${random}`;
+    }
 
-        await new Promise(resolve => writeStream.on("close", resolve));
-        writeStream.end();
-        fs.renameSync(filePath + "_saving", filePath);
-        resolve();
-      });
-    });
+    let pathName = `${savePath}/${fileName}`;
+
+    let tempFilePath = `${pathName}.tydownload`;
+    let filePath = `${pathName}.${imgData.extension}`;
+
+    let writeStream = fs.createWriteStream(tempFilePath);
+
+    imgData.data.pipe(writeStream);
+
+    await new Promise(resolve => writeStream.on("close", resolve));
+    writeStream.end();
+    fs.renameSync(tempFilePath, filePath);
   }
 }
