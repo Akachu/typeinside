@@ -1,16 +1,9 @@
 import { Transform } from "stream";
 import request from "./request";
-import { RequestMethod } from "./interface";
+import { ImageData, RequestMethod } from "./interface";
 import { HEADERS } from "../api";
 import fs from "fs";
 import http from "http";
-
-interface ImageData {
-  fileName: string;
-  extension: string;
-  data: Transform;
-  size: number;
-}
 
 export async function image(url: string): Promise<ImageData> {
   let imageStream: Transform = new Transform();

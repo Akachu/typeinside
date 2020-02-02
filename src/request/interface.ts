@@ -1,3 +1,5 @@
+import { Transform } from "stream";
+
 export enum RequestMethod {
   GET = "GET",
   POST = "POST"
@@ -15,4 +17,11 @@ export interface RequestResult {
   reason?: any;
   headers?: any;
   data?: any;
+}
+
+export interface ImageData {
+  fileName: string;
+  extension: string;
+  data: Transform;
+  size: number;
 }
