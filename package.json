@@ -22,7 +22,7 @@
   "author": "Akachu <marscop7@gmail.com>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "repository": {
     "type": "git",
     "url": "https://github.com/Akachu/typeinside.git"
