@@ -3,7 +3,7 @@ import request from "./request";
 import { ImageData, RequestMethod } from "./interface";
 import { HEADERS } from "../api";
 import fs from "fs";
-import http from "http";
+import { IncomingMessage } from "http";
 
 export async function image(url: string): Promise<ImageData> {
   let imageStream: Transform = new Transform();
@@ -14,7 +14,7 @@ export async function image(url: string): Promise<ImageData> {
     headers: HEADERS.IMAGE
   };
 
-  let res: http.IncomingMessage = await new Promise(resolve =>
+  let res: IncomingMessage = await new Promise(resolve =>
     request(RequestMethod.GET, url, options, resolve)
   );
 
@@ -47,7 +47,11 @@ export async function image(url: string): Promise<ImageData> {
 }
 
 export namespace image {
-  export async function save(url: string, savePath: string, fileName?: string) {
+  export async function save(
+    url: string,
+    savePath: string,
+    fileName?: string
+  ): Promise<void> {
     let imgData: ImageData = await image(url);
 
     if (!fileName) {

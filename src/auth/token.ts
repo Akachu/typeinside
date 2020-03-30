@@ -1,7 +1,7 @@
 import crypto from "crypto";
-import { get, post, getResultData } from "./request";
-import { API, SIGNATURE } from "./api";
-import { makeRandomString as rs } from "./tool";
+import { get, post, getResultData } from "../request";
+import { API, SIGNATURE } from "../api";
+import { makeRandomString as rs } from "../tool";
 
 export function getRandomClientToken() {
   return `${rs(11)}:${rs(139)}`;

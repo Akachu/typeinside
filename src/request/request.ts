@@ -1,4 +1,4 @@
-import http from "http";
+import http, { IncomingMessage } from "http";
 import https from "https";
 import { parse as parseUrl } from "url";
 import { HEADERS } from "../api";
@@ -10,23 +10,22 @@ export default async function request(
   method: RequestMethod,
   url: string,
   options: RequestOptions = {},
-  responseHandler?: (res: http.IncomingMessage) => void
+  responseHandler?: (res: IncomingMessage) => void
 ): Promise<RequestResult> {
-  let { headers, data, query } = options;
-  if (!headers) headers = HEADERS.API;
+  const { headers, data, query } = options;
 
-  let requestOptions = {
-    method,
-    headers
-  };
-
-  let parsedUrl = parseUrl(url);
-  let protocol = parsedUrl.protocol === "http:" ? http : https;
+  const parsedUrl = parseUrl(url);
+  const protocol = parsedUrl.protocol === "http:" ? http : https;
 
   if (query) url += `?${makeQueryString(query)}`;
 
+  const requestOptions: http.RequestOptions = {
+    method,
+    headers: headers || HEADERS.API
+  };
+
   if (responseHandler) {
-    let req = protocol.request(url, requestOptions, responseHandler);
+    const req = protocol.request(url, requestOptions, responseHandler);
     try {
       req.on("error", err => {
         throw err;
@@ -42,8 +41,8 @@ export default async function request(
       success: true
     };
   } else {
-    let res: http.IncomingMessage = await new Promise((resolve, reject) => {
-      let req = protocol.request(url, requestOptions, resolve);
+    const res: IncomingMessage = await new Promise((resolve, reject) => {
+      const req = protocol.request(url, requestOptions, resolve);
 
       if (data) req.write(data);
 
@@ -62,30 +61,28 @@ export default async function request(
 
     if (res.statusCode === 302 && headers.location) {
       return get(headers.location);
-    } else {
-      let parsedData;
+    }
 
-      try {
-        parsedData = JSON.parse(responseData);
-        if (parsedData[0] && parsedData[0].result === false) {
-          return {
-            success: false,
-            headers,
-            reason: parsedData[0].cause
-          };
-        }
+    try {
+      const parsedData = JSON.parse(responseData);
+      if (parsedData[0] && parsedData[0].result === false) {
         return {
-          success: true,
+          success: false,
           headers,
-          data: parsedData
-        };
-      } catch (err) {
-        return {
-          success: true,
-          headers,
-          data: responseData
+          reason: parsedData[0].cause
         };
       }
+      return {
+        success: true,
+        headers,
+        data: parsedData
+      };
+    } catch (err) {
+      return {
+        success: true,
+        headers,
+        data: responseData
+      };
     }
   }
 }

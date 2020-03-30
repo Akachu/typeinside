@@ -14,7 +14,7 @@ export async function list(galleryId: string, appId: string, page = 1) {
   let result = await get.withHash(API.ARTICLE.LIST, options);
   let data = getResultData(result);
   if (data) {
-    let gallList: Array<any> = data.gall_list;
+    let gallList: any[] = data.gall_list;
     return gallList.map(article => {
       article.galleryId = galleryId;
       return parseArticleData(article);

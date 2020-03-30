@@ -1,29 +1,12 @@
 import { Article, ArticleDetail, GalleryHeader } from "./interface";
+import { User } from "../interface";
+import { parseUser, parseDateString } from "../parse";
 
-export function parseDateString(data: string) {
-  let yearRegexp = /\d+\.\d+\.\d+/;
-  let timeRegexp = /\d+:\d+/;
 
-  let year = data.match(yearRegexp);
-  let time = data.match(timeRegexp);
-
-  let date: Date;
-  if (year && time) {
-    date = new Date(data);
-  } else if (year) {
-    date = new Date(year[0]);
-  } else if (time) {
-    date = new Date();
-    let timeArr = data.split(":").map(num => parseInt(num));
-    date.setHours(timeArr[0], timeArr[1]);
-  } else {
-    date = new Date();
-  }
-
-  return date;
-}
 
 export function parseArticleData(data: any) {
+  let user: User = parseUser(data);
+
   let parsed: Article = {
     galleryId: data.galleryId,
     index: parseInt(data.no),
@@ -37,13 +20,10 @@ export function parseArticleData(data: any) {
     comment: parseInt(data.total_comment),
     voiceComment: data.voice_chk !== "N" ? parseInt(data.total_voice) : 0,
     isWinnerta: data.winnerta_icon === "Y",
-    name: data.name,
-    userId: data.user_id || null,
-    ip: data.ip !== "" ? data.ip : null,
-    memberIcon: parseInt(data.member_icon),
     title: data.subject,
     header: data.headtitle || null,
-    date: parseDateString(data.date_time)
+    date: parseDateString(data.date_time),
+    user
   };
 
   return parsed;
@@ -63,7 +43,7 @@ export function parseBodyData(data: string) {
 export function parseArticleDetailData(data: any) {
   let article = parseArticleData(data);
 
-  let headers: Array<GalleryHeader> = [];
+  let headers: GalleryHeader[] = [];
 
   if (data.head_text) {
     headers = data.head_text.map(

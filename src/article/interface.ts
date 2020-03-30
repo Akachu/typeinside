@@ -1,3 +1,5 @@
+import { User } from "../interface";
+
 export interface GalleryHeader {
   index: number;
   name: string;
@@ -23,13 +25,10 @@ export interface Article {
   comment: number;
   voiceComment: number;
   isWinnerta: boolean;
-  name: string;
-  userId: string;
-  ip: string | null;
-  memberIcon: number;
   title: string;
   header: string;
   date: Date;
+  user: User;
 }
 
 export interface ArticleDetail extends Article {
@@ -43,7 +42,7 @@ export interface ArticleDetail extends Article {
   body: string;
   next: NeighborArticle;
   prev: NeighborArticle;
-  galleryHeaders: Array<GalleryHeader>;
+  galleryHeaders: GalleryHeader[];
   isMinor: boolean;
   isNotice: boolean;
 }

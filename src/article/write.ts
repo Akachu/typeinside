@@ -28,8 +28,8 @@ export async function write<T extends Guest | Member>(
   }
   let bodyList = form.body.split("\n");
 
-  for(let i = 0; i < bodyList.length; i ++) {
-    data[`memo_block[${i}]`] = `<div>${bodyList[i]} </div>`
+  for (let i = 0; i < bodyList.length; i++) {
+    data[`memo_block[${i}]`] = `<div>${bodyList[i]} </div>`;
   }
 
   let result = await post.multipart(API.ARTICLE.WRITE, data);

@@ -13,7 +13,7 @@ import { article, request, getAppId } from('typeinside');
 
 const appId = await getAppId();
 
-/** @returns Array<Article> */
+/** @returns Article[]*/
 let articleList = await article.list(galleryName, appId);
 ```
 

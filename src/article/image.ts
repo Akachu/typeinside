@@ -10,7 +10,7 @@ export async function image(
   galleryId: string,
   appId: string,
   index: number
-): Promise<Array<ImageUrl>> {
+): Promise<ImageUrl[]> {
   let options = {
     query: {
       no: index.toString(),
