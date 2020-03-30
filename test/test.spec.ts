@@ -43,6 +43,11 @@ describe("Typeinside run test", () => {
     expect(result).to.not.null;
   });
 
+  it("get comments of article", async () => {
+    let result = await dc.comment.list(galleryId, appId, articleIndex);
+    expect(result).to.not.null;
+  });
+
   it("download image", async () => {
     let imgUrls = await dc.article.image(galleryId, appId, articleIndex);
     let fullUrl = imgUrls[0].resized;
@@ -83,7 +88,7 @@ describe("Typeinside run test", () => {
   let userId: string;
 
   it("login with member account", async () => {
-    let loginResult = await dc.login(memberId, memberPw);
+    let loginResult = await dc.auth.login(memberId, memberPw);
     expect(loginResult.success).to.true;
     userId = loginResult.userInfo!.userId;
   });

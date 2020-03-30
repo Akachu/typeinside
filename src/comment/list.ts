@@ -1,7 +1,7 @@
 import { API } from "../api";
 import { get, RequestOptions, getResultData } from "../request";
-import { parseCommentData, parseCommentListResultData } from "./parse";
-import { Comment, CommentListResult } from "./interface";
+import { parseCommentListResultData } from "./parse";
+import { CommentListResult } from "./interface";
 
 export async function list(
   galleryId: string,
