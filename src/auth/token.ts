@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import * as crypto from "crypto";
 import { get, post, getResultData } from "../request";
 import { API, SIGNATURE } from "../api";
 import { makeRandomString as rs } from "../tool";
@@ -55,7 +55,7 @@ export async function getAppId(clientToken?: string) {
   const formData = {
     client_token: clientToken,
     value_token: valueToken,
-    signature: SIGNATURE
+    signature: SIGNATURE,
   };
 
   try {

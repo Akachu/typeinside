@@ -9,7 +9,7 @@
 ### get article data
 
 ```ts
-import { article, request, getAppId } from('typeinside');
+import { article, request, getAppId } from "typeinside";
 
 const appId = await getAppId();
 
@@ -20,19 +20,17 @@ let articleList = await article.list(galleryName, appId);
 ### download image
 
 ```ts
-const galleryName = 'cat';
+const galleryName = "cat";
 
 let index = await article.lastIndex(galleryName, appId);
 let imgList = await article.image(galleryName, appId, index);
 
 for (let img of imgList) {
-  
   /** @returns { fileName: string, extension: string, data: Stream } */
   await request.image(img.full);
 
   // or download directly
-  await request.image.save(img.full, './catImages/');
-
+  await request.image.save(img.full, "./catImages/");
 }
 ```
 

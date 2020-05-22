@@ -80,3 +80,7 @@ export interface ArticleDeleteForm {
   index: number;
   clientToken: string;
 }
+export interface ImageUrl {
+  full: string;
+  resized: string;
+}

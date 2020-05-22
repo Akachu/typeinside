@@ -9,7 +9,7 @@ const memberId = process.env.dcApiMemberId!;
 const memberPw = process.env.dcApiMemberPw!;
 
 function delay(ms: number) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
@@ -69,7 +69,7 @@ describe("Typeinside run test", () => {
       body: "비밀번호는 123456",
       name: "ㅇㅇ",
       password: "123456",
-      clientToken
+      clientToken,
     });
 
     expect(result).to.not.null;
@@ -81,7 +81,7 @@ describe("Typeinside run test", () => {
       galleryId: writeTestGalleryId,
       index: tempArticleIndex,
       password: "123456",
-      clientToken
+      clientToken,
     });
   });
 

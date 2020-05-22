@@ -1,15 +1,31 @@
 import * as article from "./article";
+export {
+  ImageUrl,
+  Article,
+  ArticleDeleteForm,
+  ArticleDetail,
+  ArticleWriteForm,
+  GalleryHeader,
+  Guest,
+  GuestPassword,
+  Member,
+  NeighborArticle,
+} from "./article";
+
 import * as comment from "./comment";
+export { Comment, CommentListResult } from "./comment";
+
 import * as request from "./request";
+export {
+  ImageData,
+  RequestMethod,
+  RequestOptions,
+  RequestResult,
+} from "./request";
+
 import * as auth from "./auth";
-import { getAppId } from "./auth";
+export { getAppId, LoginResult, UserInfo } from "./auth";
 
-const typeinside = {
-  article,
-  comment,
-  request,
-  auth,
-  getAppId
-};
+export { User } from "./interface";
 
-export = typeinside;
+export { article, comment, request, auth };

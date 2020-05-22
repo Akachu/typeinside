@@ -1,10 +1,6 @@
 import { API } from "../api";
 import { get } from "../request";
-
-export interface ImageUrl {
-  full: string;
-  resized: string;
-}
+import { ImageUrl } from "./interface";
 
 export async function image(
   galleryId: string,
@@ -15,8 +11,8 @@ export async function image(
     query: {
       no: index.toString(),
       id: galleryId,
-      app_id: appId
-    }
+      app_id: appId,
+    },
   };
 
   let result = await get.withHash(API.ARTICLE.IMAGE, options);
@@ -26,7 +22,7 @@ export async function image(
 
     return data.map((item: any) => ({
       full: item.img,
-      resized: item.img_clone
+      resized: item.img_clone,
     }));
   } else if (result.success) {
     return [];

@@ -18,11 +18,15 @@
     "test": "nyc mocha",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
+  "keywords": [
+    "dc",
+    "api"
+  ],
   "license": "MIT",
   "author": "Akachu <marscop7@gmail.com>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "repository": {
     "type": "git",
     "url": "https://github.com/Akachu/typeinside.git"
