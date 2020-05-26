@@ -9,7 +9,7 @@ export function get(
 ): Promise<RequestResult> {
   return request(RequestMethod.GET, url, {
     headers: options.headers,
-    query: options.query
+    query: options.query,
   });
 }
 

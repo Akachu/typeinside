@@ -5,22 +5,22 @@ import { parseArticleDetailData } from "./parse";
 
 export async function detail(
   galleryId: string,
-  appId: string,
-  index: number
+  index: number,
+  appId: string
 ): Promise<ArticleDetail> {
-  let options = {
+  const options = {
     query: {
       no: index.toString(),
       id: galleryId,
-      app_id: appId
-    }
+      app_id: appId,
+    },
   };
 
-  let result = await get.withHash(API.ARTICLE.DETAIL, options);
-  let data = getResultData(result);
+  const result = await get.withHash(API.ARTICLE.DETAIL, options);
+  const data = getResultData(result);
 
   if (data) {
-    let viewData = { ...data.view_info, ...data.view_main, galleryId };
+    const viewData = { ...data.view_info, ...data.view_main, galleryId };
     return parseArticleDetailData(viewData);
   } else {
     throw new Error("failed to get article detail data");

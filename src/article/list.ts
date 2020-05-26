@@ -1,21 +1,35 @@
 import { get, getResultData } from "../request";
 import { API } from "../api";
 import { parseArticleData } from "./parse";
+import { ArticleListOption } from "./interface";
 
-export async function list(galleryId: string, appId: string, page = 1) {
-  let options = {
+export async function list(
+  galleryId: string,
+  appId: string,
+  { page, search }: ArticleListOption = { page: 1 }
+) {
+  const requestOption: Record<string, any> = {
     query: {
       page: page.toString(),
       id: galleryId,
-      app_id: appId
-    }
+      app_id: appId,
+    },
   };
 
-  let result = await get.withHash(API.ARTICLE.LIST, options);
-  let data = getResultData(result);
+  if (search) {
+    const { type, keyword } = search;
+    requestOption.query = {
+      ...requestOption.query,
+      s_type: type,
+      serVal: keyword || "",
+    };
+  }
+
+  const result = await get.withHash(API.ARTICLE.LIST, requestOption);
+  const data = getResultData(result);
   if (data) {
-    let gallList: any[] = data.gall_list;
-    return gallList.map(article => {
+    const gallList: any[] = data.gall_list;
+    return gallList.map((article) => {
       article.galleryId = galleryId;
       return parseArticleData(article);
     });
@@ -25,7 +39,7 @@ export async function list(galleryId: string, appId: string, page = 1) {
 }
 
 export async function lastIndex(galleryId: string, appId: string) {
-  let articleList = await list(galleryId, appId, 1);
+  let articleList = await list(galleryId, appId);
   if (!articleList) throw new Error("failed to get gallery info");
   return articleList[0].index;
 }

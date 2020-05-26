@@ -4,10 +4,10 @@ import { ImageUrl } from "./interface";
 
 export async function image(
   galleryId: string,
-  appId: string,
-  index: number
+  index: number,
+  appId: string
 ): Promise<ImageUrl[]> {
-  let options = {
+  const options = {
     query: {
       no: index.toString(),
       id: galleryId,
@@ -15,10 +15,10 @@ export async function image(
     },
   };
 
-  let result = await get.withHash(API.ARTICLE.IMAGE, options);
+  const result = await get.withHash(API.ARTICLE.IMAGE, options);
 
   if (result.success && result.data) {
-    let data = result.data;
+    const data = result.data;
 
     return data.map((item: any) => ({
       full: item.img,

@@ -2,12 +2,10 @@ import { Article, ArticleDetail, GalleryHeader } from "./interface";
 import { User } from "../interface";
 import { parseUser, parseDateString } from "../parse";
 
-
-
 export function parseArticleData(data: any) {
-  let user: User = parseUser(data);
+  const user: User = parseUser(data);
 
-  let parsed: Article = {
+  const parsed: Article = {
     galleryId: data.galleryId,
     index: parseInt(data.no),
     view: parseInt(data.hit),
@@ -23,7 +21,7 @@ export function parseArticleData(data: any) {
     title: data.subject,
     header: data.headtitle || null,
     date: parseDateString(data.date_time),
-    user
+    user,
   };
 
   return parsed;
@@ -41,7 +39,7 @@ export function parseBodyData(data: string) {
 }
 
 export function parseArticleDetailData(data: any) {
-  let article = parseArticleData(data);
+  const article = parseArticleData(data);
 
   let headers: GalleryHeader[] = [];
 
@@ -51,7 +49,7 @@ export function parseArticleDetailData(data: any) {
         index: parseInt(ht.no),
         name: ht.name,
         level: parseInt(ht.level),
-        selected: ht.selected
+        selected: ht.selected,
       })
     );
   }
@@ -65,7 +63,7 @@ export function parseArticleDetailData(data: any) {
     captchaLength = data.recommend_code_count;
   }
 
-  let parsedDetail: ArticleDetail = {
+  const parsedDetail: ArticleDetail = {
     ...article,
     recommendMember: parseInt(data.recommend_member),
     unrecommend: parseInt(data.nonrecommend),
@@ -79,7 +77,7 @@ export function parseArticleDetailData(data: any) {
     prev: { index: parseInt(data.prev_link), title: data.prev_subject },
     galleryHeaders: headers,
     isMinor: data.is_minor || false,
-    isNotice: data.isNotice === "Y"
+    isNotice: data.isNotice === "Y",
   };
 
   return parsedDetail;

@@ -23,7 +23,7 @@ let articleList = await article.list(galleryName, appId);
 const galleryName = "cat";
 
 let index = await article.lastIndex(galleryName, appId);
-let imgList = await article.image(galleryName, appId, index);
+let imgList = await article.image(galleryName, index, appId);
 
 for (let img of imgList) {
   /** @returns { fileName: string, extension: string, data: Stream } */

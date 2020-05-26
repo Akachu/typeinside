@@ -5,8 +5,8 @@ import { CommentListResult } from "./interface";
 
 export async function list(
   galleryId: string,
-  appId: string,
   index: number,
+  appId: string,
   page = 1
 ): Promise<CommentListResult> {
   const options: RequestOptions = {
@@ -14,8 +14,8 @@ export async function list(
       app_id: appId,
       id: galleryId,
       no: index.toString(),
-      re_page: page.toString()
-    }
+      re_page: page.toString(),
+    },
   };
 
   const result = await get.withHash(API.COMMENT.LIST, options);

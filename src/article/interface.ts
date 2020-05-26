@@ -84,3 +84,21 @@ export interface ImageUrl {
   full: string;
   resized: string;
 }
+
+export enum SearchType {
+  ALL = "all",
+  TITLE = "subject",
+  BODY = "memo",
+  TITLE_BODY = "subject_m",
+  USER_NAME = "name",
+}
+
+export interface ArticleListOption {
+  page: number;
+  search?: SearchOption;
+}
+
+export interface SearchOption {
+  keyword: string;
+  type: SearchType;
+}
