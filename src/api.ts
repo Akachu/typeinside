@@ -21,6 +21,7 @@ export const HEADERS = {
 
 export const API = {
   LOGIN: "https://dcid.dcinside.com/join/mobile_app_login.php",
+  SEARCH: "http://app.dcinside.com/api/_total_search.php",
   APP: {
     CHECK: "http://json2.dcinside.com/json0/app_check_A_rina.php",
     KEY_VERIFICATION: "https://dcid.dcinside.com/join/mobile_app_key_verification_3rd.php",

@@ -1,6 +1,6 @@
 import { User } from "./interface";
 
-export function parseDateString(data: string) {
+export function parseTimeString(data: string) {
   let yearRegexp = /\d+\.\d+\.\d+/;
   let timeRegexp = /\d+:\d+/;
 

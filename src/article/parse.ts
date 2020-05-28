@@ -1,6 +1,6 @@
 import { Article, ArticleDetail, GalleryHeader } from "./interface";
 import { User } from "../interface";
-import { parseUser, parseDateString } from "../parse";
+import { parseUser, parseTimeString } from "../parse";
 
 export function parseArticleData(data: any) {
   const user: User = parseUser(data);
@@ -20,7 +20,7 @@ export function parseArticleData(data: any) {
     isWinnerta: data.winnerta_icon === "Y",
     title: data.subject,
     header: data.headtitle || null,
-    date: parseDateString(data.date_time),
+    time: parseTimeString(data.date_time),
     user,
   };
 
@@ -70,7 +70,7 @@ export function parseArticleDetailData(data: any) {
     recommendCaptcha: hasCaptcha,
     recommendCaptchaType: captchaType,
     recommendCaptchaLength: captchaLength,
-    galleryTitle: data.galltitle,
+    galleryName: data.galltitle,
     galleryCategory: parseInt(data.category),
     body: parseBodyData(data.memo),
     next: { index: parseInt(data.next_link), title: data.next_subject },

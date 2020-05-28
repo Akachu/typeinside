@@ -10,6 +10,7 @@ import { list as commentList } from "./comment";
 export class DC {
   private appId?: string;
   private clientToken?: string;
+  
   private lastTokenRefresh?: number;
 
   constructor(clientToken?: string) {
@@ -20,10 +21,9 @@ export class DC {
     this.clientToken = clientToken;
   }
 
-  public async getNewAppId() {
-    const newAppId = await getAppId(this.clientToken);
-    this.appId = newAppId;
-    this.lastTokenRefresh = Date.now();
+  public async getNewAppId(clientToken = this.clientToken) {
+    const newAppId = await getAppId(clientToken);
+    this.setAppId(newAppId);
     return newAppId;
   }
 
@@ -37,6 +37,11 @@ export class DC {
     } else {
       return this.appId;
     }
+  }
+
+  public setAppId(appId: string, lastTokenRefresh: number = Date.now()) {
+    this.appId = appId;
+    this.lastTokenRefresh = lastTokenRefresh;
   }
 
   public async getArticleList(galleryId: string, option?: ArticleListOption) {

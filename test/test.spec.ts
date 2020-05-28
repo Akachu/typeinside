@@ -1,6 +1,8 @@
-import * as dc from "../src/index";
+import * as dc from "../src/";
 import { expect } from "chai";
+import "dotenv/config";
 import "mocha";
+import { getRandomClientToken } from "../src/auth";
 
 const galleryId = "cat";
 const articleIndex = 1193238;
@@ -18,7 +20,7 @@ describe("Typeinside run test", () => {
   let appId: string;
 
   it("generate app id", async () => {
-    let result = await dc.getAppId();
+    let result = await dc.getAppId(clientToken);
     expect(result).to.not.null;
     appId = result;
   });
@@ -34,55 +36,64 @@ describe("Typeinside run test", () => {
   });
 
   it("get detail of article", async () => {
-    let result = await dc.article.detail(galleryId, appId, articleIndex);
+    let result = await dc.article.detail(galleryId, articleIndex, appId);
     expect(result).to.not.null;
   });
 
   it("get img urls of article", async () => {
-    let result = await dc.article.image(galleryId, appId, articleIndex);
+    let result = await dc.article.image(galleryId, articleIndex, appId);
     expect(result).to.not.null;
   });
 
   it("get comments of article", async () => {
-    let result = await dc.comment.list(galleryId, appId, articleIndex);
+    let result = await dc.comment.list(galleryId, articleIndex, appId);
     expect(result).to.not.null;
   });
 
   it("download image", async () => {
-    let imgUrls = await dc.article.image(galleryId, appId, articleIndex);
+    let imgUrls = await dc.article.image(galleryId, articleIndex, appId);
     let fullUrl = imgUrls[0].resized;
     let result = await dc.request.image(fullUrl);
     expect(result).to.not.null;
   });
-
-  it("wait 5 seconds", async () => {
-    await delay(5000);
-  });
-
   let writeTestGalleryId = "programming";
   let tempArticleIndex: number;
 
   it("write article with guest account", async () => {
-    let result = await dc.article.write(appId, {
-      galleryId: writeTestGalleryId,
-      title: "api 테스트",
-      body: "비밀번호는 123456",
-      name: "ㅇㅇ",
-      password: "123456",
-      clientToken,
-    });
+    appId = await dc.getAppId(clientToken);
+
+    await delay(1500);
+
+    let result = await dc.article.write(
+      {
+        galleryId: writeTestGalleryId,
+        title: "ㅇㅇ",
+        body: "ㅇㅇ",
+        name: "ㅇㅇ",
+        password: "123456",
+        clientToken: clientToken,
+      },
+      appId
+    );
 
     expect(result).to.not.null;
     tempArticleIndex = result;
   });
 
   it("delete article", async () => {
-    await dc.article.delete(appId, {
-      galleryId: writeTestGalleryId,
-      index: tempArticleIndex,
-      password: "123456",
-      clientToken,
-    });
+    appId = await dc.getAppId(clientToken);
+
+    await delay(1500);
+
+    await dc.article.delete(
+      {
+        galleryId: writeTestGalleryId,
+        index: tempArticleIndex,
+        password: "123456",
+        clientToken,
+      },
+      appId
+    );
   });
 
   let userId: string;
@@ -92,28 +103,33 @@ describe("Typeinside run test", () => {
     expect(loginResult.success).to.true;
     userId = loginResult.userInfo!.userId;
   });
-
   /*
   it("write article with member account", async () => {
-    let result = await dc.article.write(appId, {
-      galleryId: writeTestGalleryId,
-      title: 'api 테스트',
-      body: '고닉 테스트',
-      userId,
-      clientToken
-    });
+    let result = await dc.article.write(
+      {
+        galleryId: writeTestGalleryId,
+        title: "ㅇㅇ",
+        body: Date.now() + "",
+        userId,
+        clientToken,
+      },
+      appId
+    );
 
     expect(result).to.not.null;
     tempArticleIndex = result;
   });
 
   it("delete article again", async () => {
-    await dc.article.delete(appId, {
-      galleryId: writeTestGalleryId,
-      index: tempArticleIndex,
-      userId,
-      clientToken
-    });
+    await dc.article.delete(
+      {
+        galleryId: writeTestGalleryId,
+        index: tempArticleIndex,
+        userId,
+        clientToken,
+      },
+      appId
+    );
   });
   */
 });

@@ -1,4 +1,4 @@
-import { parseUser, parseDateString } from "../parse";
+import { parseUser, parseTimeString } from "../parse";
 import { User } from "../interface";
 import { Comment, CommentListResult } from "./interface";
 
@@ -8,7 +8,7 @@ export function parseCommentData(data: any): Comment {
     index: Number(data.comment_no),
     body: data.comment_memo,
     user: user,
-    date: parseDateString(data.date_time)
+    time: parseTimeString(data.date_time)
   };
 
   return comment;

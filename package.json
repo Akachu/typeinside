@@ -10,6 +10,7 @@
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "ts-node": "^8.5.4",
+    "dotenv": "^8.2.0",
     "typescript": "^3.9.3"
   },
   "scripts": {
@@ -26,7 +27,7 @@
   "author": "Akachu <marscop7@gmail.com>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "repository": {
     "type": "git",
     "url": "https://github.com/Akachu/typeinside.git"

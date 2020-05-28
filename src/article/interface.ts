@@ -27,7 +27,7 @@ export interface Article {
   isWinnerta: boolean;
   title: string;
   header: string;
-  date: Date;
+  time: Date;
   user: User;
 }
 
@@ -37,7 +37,7 @@ export interface ArticleDetail extends Article {
   recommendCaptcha: boolean;
   recommendCaptchaType: string;
   recommendCaptchaLength: number;
-  galleryTitle: string;
+  galleryName: string;
   galleryCategory: number;
   body: string;
   next: NeighborArticle;
@@ -85,7 +85,7 @@ export interface ImageUrl {
   resized: string;
 }
 
-export enum SearchType {
+export enum ArticleSearchType {
   ALL = "all",
   TITLE = "subject",
   BODY = "memo",
@@ -95,10 +95,10 @@ export enum SearchType {
 
 export interface ArticleListOption {
   page: number;
-  search?: SearchOption;
+  search?: ArticleSearchOption;
 }
 
-export interface SearchOption {
+export interface ArticleSearchOption {
   keyword: string;
-  type: SearchType;
+  type: ArticleSearchType;
 }

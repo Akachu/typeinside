@@ -10,6 +10,6 @@ export interface CommentListResult {
 export interface Comment {
   body: string;
   index: number;
-  date: Date;
+  time: Date;
   user: User;
 }

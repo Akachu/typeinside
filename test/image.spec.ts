@@ -15,14 +15,15 @@ describe("image download test", () => {
   });
 
   it("download image", async () => {
-    let imgUrls = await dc.article.image(galleryId, appId, articleIndex);
+    let imgUrls = await dc.article.image(galleryId, articleIndex, appId);
     let fullUrl = imgUrls[0].resized;
     let result = await dc.request.image(fullUrl);
+
     expect(result).to.not.null;
   });
 
   it("download image and save it", async () => {
-    let imgUrls = await dc.article.image(galleryId, appId, articleIndex);
+    let imgUrls = await dc.article.image(galleryId, articleIndex, appId);
     let fullUrl = imgUrls[0].resized;
     let result = await dc.request.image.save(fullUrl, "./", "testImage");
     expect(result).to.not.null;

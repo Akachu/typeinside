@@ -8,8 +8,10 @@ tsconfig.json
 .vscode/
 .nyc_output/
 .github/
+.env
 node_modules/
 test/
 src/
 coverage/
 example/
+analyze/
