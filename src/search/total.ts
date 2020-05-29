@@ -1,4 +1,5 @@
 import { API } from "../api";
+import { post } from "../request";
 import {
   SearchType,
   SearchAllResult,
@@ -6,12 +7,10 @@ import {
   WikiSearchResult,
   GallerySearchResult,
 } from "./interface";
-import { post } from "../request";
 import {
-  parseSearchAllResult,
-  parseArticleSearchResult,
-  parseWikiSearchResult,
-  parseGallerySearchResult,
+  parseSimpleArticleData,
+  parseSimpleGalleryData,
+  parseWikiData,
 } from "./prase";
 
 export async function total(keyword: string, type: SearchType, appId: string) {
@@ -34,7 +33,13 @@ export namespace total {
     appId: string
   ): Promise<SearchAllResult> {
     const data = await total(keyword, SearchType.ALL, appId);
-    return parseSearchAllResult(data);
+    return {
+      articleList: data.board.map(parseSimpleArticleData),
+      dailyBestArticleList: data.today.map(parseSimpleArticleData),
+      majorGalleryList: data.main_gall.map(parseSimpleGalleryData),
+      minorGalleryList: data.minor_gall.map(parseSimpleGalleryData),
+      wikiList: data.wiki.map(parseWikiData),
+    };
   }
 
   export async function gallery(
@@ -42,7 +47,12 @@ export namespace total {
     appId: string
   ): Promise<GallerySearchResult> {
     const data = await total(keyword, SearchType.GALLERY, appId);
-    return parseGallerySearchResult(data);
+    return {
+      majorGalleryList: data.main_gall.map(parseSimpleGalleryData),
+      minorGalleryList: data.minor_gall.map(parseSimpleGalleryData),
+      majorRecommendGalleryList: data.main_recomm_gall.map(parseSimpleGalleryData),
+      minorRecommendGalleryList: data.minor_recomm_gall.map(parseSimpleGalleryData),
+    };
   }
 
   export async function article(
@@ -50,7 +60,11 @@ export namespace total {
     appId: string
   ): Promise<ArticleSearchResult> {
     const data = await total(keyword, SearchType.ARTICLE, appId);
-    return parseArticleSearchResult(data);
+    const info = data.info[0];
+    return {
+      info: { page: info.total_page, type: info.type },
+      list: data.list.map(parseSimpleArticleData),
+    };
   }
 
   export async function wiki(
@@ -58,6 +72,10 @@ export namespace total {
     appId: string
   ): Promise<WikiSearchResult> {
     const data = await total(keyword, SearchType.WIKI, appId);
-    return parseWikiSearchResult(data);
+    const info = data.info[0];
+    return {
+      info: { page: info.total_page, type: info.type },
+      list: data.list.map(parseWikiData),
+    };
   }
 }

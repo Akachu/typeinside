@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["ES2016", "ES2017", "ES2018"],
+    "lib": ["ES2016", "ES2017", "ES2018", "DOM"],
     "module": "commonjs",
     "target": "es5",
     "sourceMap": false,
@@ -15,7 +15,9 @@
     "noImplicitThis": true,
     "alwaysStrict": true,
     "declaration": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    // "noUnusedParameters": true,
+    // "noUnusedLocals": true
   },
   "exclude": ["./test"],
   "include": ["./src"]

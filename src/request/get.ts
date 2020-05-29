@@ -1,22 +1,19 @@
 import request from "./request";
-import { RequestOptions, RequestMethod, RequestResult } from "./interface";
+import { RequestOptions, RequestResult } from "./interface";
 import { makeQueryString } from "../tool";
 import { API } from "../api";
 
 export function get(
   url: string,
-  options: RequestOptions = {}
+  options?: RequestOptions
 ): Promise<RequestResult> {
-  return request(RequestMethod.GET, url, {
-    headers: options.headers,
-    query: options.query,
-  });
+  return request(url, options);
 }
 
 export namespace get {
   export async function withHash(
     url: string,
-    options: RequestOptions = {}
+    options: RequestOptions
   ): Promise<RequestResult> {
     let { query } = options;
 
@@ -33,4 +30,3 @@ export namespace get {
     return result;
   }
 }
-

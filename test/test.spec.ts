@@ -2,7 +2,6 @@ import * as dc from "../src/";
 import { expect } from "chai";
 import "dotenv/config";
 import "mocha";
-import { getRandomClientToken } from "../src/auth";
 
 const galleryId = "cat";
 const articleIndex = 1193238;
@@ -103,7 +102,7 @@ describe("Typeinside run test", () => {
     expect(loginResult.success).to.true;
     userId = loginResult.userInfo!.userId;
   });
-  /*
+  
   it("write article with member account", async () => {
     let result = await dc.article.write(
       {
@@ -131,5 +130,4 @@ describe("Typeinside run test", () => {
       appId
     );
   });
-  */
 });

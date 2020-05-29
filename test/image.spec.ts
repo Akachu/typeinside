@@ -1,5 +1,6 @@
 import * as dc from "../src/index";
 import { expect } from "chai";
+import * as fs from "fs";
 import "mocha";
 
 const galleryId = "cat";
@@ -25,7 +26,8 @@ describe("image download test", () => {
   it("download image and save it", async () => {
     let imgUrls = await dc.article.image(galleryId, articleIndex, appId);
     let fullUrl = imgUrls[0].resized;
-    let result = await dc.request.image.save(fullUrl, "./", "testImage");
+    let result = await dc.request.image.save(fullUrl, "./");
+    fs.unlinkSync(result);
     expect(result).to.not.null;
   });
 });

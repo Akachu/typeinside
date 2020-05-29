@@ -6,7 +6,7 @@ import { total as search } from "./search";
 
 export { ImageUrl, Article, ArticleDeleteForm, ArticleDetail, ArticleWriteForm, GalleryHeader, Guest, GuestPassword, Member, NeighborArticle, } from "./article";
 export { Comment, CommentListResult } from "./comment";
-export { ImageData, RequestMethod, RequestOptions, RequestResult, } from "./request";
+export { FileData, RequestMethod, RequestOptions, RequestResult, } from "./request";
 export { getAppId, LoginResult, UserInfo } from "./auth";
 export { ArticleSearchResult, GallerySearchResult, SearchAllResult, SearchListInfo, SearchType, SimpleArticle, SimpleGallery, Wiki, WikiSearchResult } from './search';
 export { User } from "./interface";

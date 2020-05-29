@@ -2,6 +2,9 @@ export const CONTENT_TYPE = {
   DEFAULT: "application/x-www-form-urlencoded; charset=UTF-8"
 };
 
+/**
+ * 앱의 signing signature
+ */
 export const SIGNATURE = "ReOo4u96nnv8Njd7707KpYiIVYQ3FlcKHDJE046Pg6s=";
 
 export const HEADERS = {

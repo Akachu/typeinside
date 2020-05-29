@@ -1,24 +1,17 @@
-import { Transform } from "stream";
-import request from "./request";
-import { ImageData, RequestMethod } from "./interface";
-import { HEADERS } from "../api";
 import fs from "fs";
-import { IncomingMessage } from "http";
+import { FileData } from "./interface";
+import { HEADERS } from "../api";
+import { streamRequset } from "./client/http";
 
-export async function image(url: string): Promise<ImageData> {
-  let imageStream: Transform = new Transform();
+export async function image(url: string): Promise<FileData> {
   let fileName: string;
   let extension: string;
 
-  let options = {
-    headers: HEADERS.IMAGE
+  const options = {
+    headers: HEADERS.IMAGE,
   };
 
-  let res: IncomingMessage = await new Promise(resolve =>
-    request(RequestMethod.GET, url, options, resolve)
-  );
-
-  let headers = res.headers;
+  const { headers, stream } = await streamRequset(url, options);
 
   let disposition = headers["content-disposition"];
   let contentType = headers["content-type"];
@@ -31,48 +24,39 @@ export async function image(url: string): Promise<ImageData> {
   fileName = disposition!.split("filename=")[1];
   extension = contentType!.split("image/")[1].toLowerCase();
 
-  res.on("data", chunk => imageStream.push(chunk));
-  res.on("end", () => {
-    imageStream.end();
-  });
-
-  let imageData: ImageData = {
+  let imageData: FileData = {
     fileName,
     extension,
-    data: imageStream,
-    size: parseInt(size)
+    data: stream,
+    size: parseInt(size),
   };
 
   return imageData;
 }
 
 export namespace image {
-  export async function save(
-    url: string,
-    savePath: string,
-    fileName?: string
-  ): Promise<void> {
-    let imgData: ImageData = await image(url);
+  export async function save(url: string, savePath: string, fileName?: string) {
+    let fileData: FileData = await image(url);
 
     if (!fileName) {
-      let random = Math.random()
-        .toFixed(5)
-        .substr(2);
+      let random = Math.random().toFixed(5).substr(2);
 
-      fileName = `${imgData.fileName}_${random}`;
+      fileName = `${fileData.fileName}_${random}`;
     }
 
     let pathName = `${savePath}/${fileName}`;
 
     let tempFilePath = `${pathName}.tydownload`;
-    let filePath = `${pathName}.${imgData.extension}`;
+    let filePath = `${pathName}.${fileData.extension}`;
 
     let writeStream = fs.createWriteStream(tempFilePath);
 
-    imgData.data.pipe(writeStream);
+    fileData.data.pipe(writeStream);
 
-    await new Promise(resolve => writeStream.on("close", resolve));
+    await new Promise((resolve) => writeStream.on("close", resolve));
     writeStream.end();
     fs.renameSync(tempFilePath, filePath);
+
+    return filePath;
   }
 }

@@ -2,14 +2,14 @@ import { Transform } from "stream";
 
 export enum RequestMethod {
   GET = "GET",
-  POST = "POST"
+  POST = "POST",
 }
 
 export interface RequestOptions {
+  method?: RequestMethod;
   headers?: Record<string, string>;
   query?: Record<string, string>;
   data?: string;
-  isMultipart?: boolean;
 }
 
 export interface RequestResult {
@@ -19,9 +19,10 @@ export interface RequestResult {
   data?: any;
 }
 
-export interface ImageData {
+export interface FileData {
   fileName: string;
   extension: string;
   data: Transform;
   size: number;
 }
+

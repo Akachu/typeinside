@@ -1,13 +1,11 @@
 import { HEADERS, CONTENT_TYPE } from "../api";
 import { makeQueryString } from "../tool";
 import request from "./request";
-import { RequestMethod, RequestResult } from "./interface";
+import { RequestMethod, RequestResult, RequestOptions } from "./interface";
 import { parse as parseUrl } from "url";
 
 function makeMultipartData(data: Record<string, string>) {
-  let boundary = Math.random()
-    .toFixed(12)
-    .substr(2);
+  let boundary = Math.random().toFixed(12).substr(2);
 
   let dataString = "";
 
@@ -29,12 +27,12 @@ function makeMultipartData(data: Record<string, string>) {
   }
 
   dataString += `--${boundary}--`;
-  
+
   let contentType = `multipart/form-data; boundary=${boundary}`;
   let contentLength = Buffer.from(dataString).byteLength;
   let multipartHeaders = {
     "Content-Type": contentType,
-    "Content-Length": contentLength.toString()
+    "Content-Length": contentLength.toString(),
   };
 
   return { dataString, multipartHeaders };
@@ -47,16 +45,17 @@ export function post(
 ): Promise<RequestResult> {
   const formData: string = makeQueryString(data);
 
-  const options = {
+  const options: RequestOptions = {
+    method: RequestMethod.POST,
     headers: {
       ...headers,
       "Content-Type": CONTENT_TYPE.DEFAULT,
-      "Content-Length": Buffer.byteLength(formData).toString()
+      "Content-Length": Buffer.byteLength(formData).toString(),
     },
-    data: formData
+    data: formData,
   };
 
-  return request(RequestMethod.POST, url, options);
+  return request(url, options);
 }
 
 export namespace post {
@@ -67,14 +66,15 @@ export namespace post {
   ): Promise<RequestResult> {
     const { dataString, multipartHeaders } = makeMultipartData(data);
     const options = {
+      method: RequestMethod.POST,
       headers: {
         ...headers,
         ...multipartHeaders,
-        Host: parseUrl(url).host!
+        Host: parseUrl(url).host!,
       },
-      data: dataString
+      data: dataString,
     };
 
-    return request(RequestMethod.POST, url, options);
+    return request(url, options);
   }
 }
