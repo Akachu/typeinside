@@ -1,7 +1,14 @@
 import fs from "fs";
-import { FileData } from "./interface";
 import { HEADERS } from "../api";
 import { streamRequset } from "./client/http";
+import { Transform } from "stream";
+
+export interface FileData {
+  fileName: string;
+  extension: string;
+  data: Transform;
+  size: number;
+}
 
 export async function image(url: string): Promise<FileData> {
   let fileName: string;

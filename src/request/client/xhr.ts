@@ -1,7 +1,7 @@
 import { RequestOptions } from "../interface";
 import { makeQueryString } from "../../tool";
 
-export async function xhrRequest(url: string, options: RequestOptions) {
+export async function xhr(url: string, options: RequestOptions) {
   const { method, data, headers, query } = options;
   const req = new XMLHttpRequest();
   if (query) url += `?${makeQueryString(query)}`;

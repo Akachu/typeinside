@@ -8,7 +8,7 @@ import { requestClient } from "./interface";
 export function getClient(): requestClient {
   let client;
   if (typeof XMLHttpRequest !== "undefined") {
-    client = require("./xhr").xhrRequest;
+    client = require("./xhr").xhr;
   } else if (
     typeof process !== "undefined" &&
     Object.prototype.toString.call(process) === "[object process]"

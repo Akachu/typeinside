@@ -2,7 +2,6 @@ import { HEADERS, CONTENT_TYPE } from "../api";
 import { makeQueryString } from "../tool";
 import request from "./request";
 import { RequestMethod, RequestResult, RequestOptions } from "./interface";
-import { parse as parseUrl } from "url";
 
 function makeMultipartData(data: Record<string, string>) {
   let boundary = Math.random().toFixed(12).substr(2);
@@ -70,7 +69,6 @@ export namespace post {
       headers: {
         ...headers,
         ...multipartHeaders,
-        Host: parseUrl(url).host!,
       },
       data: dataString,
     };

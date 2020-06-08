@@ -19,10 +19,3 @@ export interface RequestResult {
   data?: any;
 }
 
-export interface FileData {
-  fileName: string;
-  extension: string;
-  data: Transform;
-  size: number;
-}
-
