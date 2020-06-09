@@ -1,4 +1,4 @@
-import * as crypto from "crypto";
+import crypto from "crypto-js";
 import { get, post, getResultData } from "../request";
 import { API, SIGNATURE } from "../api";
 import { makeRandomString as rs } from "../tool";
@@ -28,10 +28,7 @@ async function getValueToken() {
 
   const food = "dcArdchk_" + date;
 
-  const hash = crypto
-    .createHash("sha256")
-    .update(Buffer.from(food, "ascii"))
-    .digest("hex");
+  const hash = crypto.SHA256(food).toString(crypto.enc.Hex);
 
   return hash;
 }

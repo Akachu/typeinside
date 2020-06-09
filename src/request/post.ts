@@ -17,7 +17,8 @@ function makeMultipartData(data: Record<string, string>) {
       value = encodeURI(value);
     }
 
-    let length = Buffer.from(value).byteLength;
+    let length = new Blob([value]).size;
+
     dataString +=
       `--${boundary}\n` +
       `Content-Disposition: form-data; name="${key}"\n` +
@@ -28,7 +29,7 @@ function makeMultipartData(data: Record<string, string>) {
   dataString += `--${boundary}--`;
 
   let contentType = `multipart/form-data; boundary=${boundary}`;
-  let contentLength = Buffer.from(dataString).byteLength;
+  let contentLength = new Blob([dataString]).size;
   let multipartHeaders = {
     "Content-Type": contentType,
     "Content-Length": contentLength.toString(),
@@ -49,7 +50,7 @@ export function post(
     headers: {
       ...headers,
       "Content-Type": CONTENT_TYPE.DEFAULT,
-      "Content-Length": Buffer.byteLength(formData).toString(),
+      "Content-Length": new Blob([formData]).size.toString(),
     },
     data: formData,
   };

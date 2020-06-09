@@ -21,7 +21,7 @@ export namespace get {
       url += `?${makeQueryString(query)}`;
     }
 
-    let hash = Buffer.from(url).toString("base64");
+    let hash = atob(url);
 
     url = `${API.REDIRECT}?hash=${hash}`;
 

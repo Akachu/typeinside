@@ -1,13 +1,12 @@
 import { RequestResult, RequestOptions } from "./interface";
-import { getClient } from "./client";
+import axios from "axios";
 export default async function request(
   url: string,
   options: RequestOptions = {}
 ): Promise<RequestResult> {
-  const req = getClient();
-  const { data, headers, statusCode } = await req(url, options);
+  const { data, headers, status } = await axios(url, options);
 
-  if (statusCode === 302 && headers.location) {
+  if (status === 302 && headers.location) {
     return request(headers.location);
   }
 

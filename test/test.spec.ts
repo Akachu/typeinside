@@ -49,12 +49,6 @@ describe("Typeinside run test", () => {
     expect(result).to.not.null;
   });
 
-  it("download image", async () => {
-    let imgUrls = await dc.article.image(galleryId, articleIndex, appId);
-    let fullUrl = imgUrls[0].resized;
-    let result = await dc.request.image(fullUrl);
-    expect(result).to.not.null;
-  });
   let writeTestGalleryId = "programming";
   let tempArticleIndex: number;
 
