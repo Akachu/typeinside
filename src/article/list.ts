@@ -1,4 +1,4 @@
-import { get, getResultData } from "../request";
+import { get, getResultData, RequestOptions } from "../request";
 import { API } from "../api";
 import { parseArticleData } from "./parse";
 import { ArticleListOption } from "./interface";
@@ -8,7 +8,7 @@ export async function list(
   appId: string,
   { page, search }: ArticleListOption = { page: 1 }
 ) {
-  const requestOption: Record<string, any> = {
+  const requestOption: RequestOptions = {
     query: {
       page: page.toString(),
       id: galleryId,

@@ -4,7 +4,7 @@ import request from "./request";
 import { RequestMethod, RequestResult, RequestOptions } from "./interface";
 
 function makeMultipartData(data: Record<string, string>) {
-  let boundary = Math.random().toFixed(12).substr(2);
+  const boundary = Math.random().toFixed(12).substr(2);
 
   let dataString = "";
 
@@ -17,20 +17,19 @@ function makeMultipartData(data: Record<string, string>) {
       value = encodeURI(value);
     }
 
-    let length = new Blob([value]).size;
-
     dataString +=
       `--${boundary}\n` +
       `Content-Disposition: form-data; name="${key}"\n` +
-      `Content-Length: ${length}\n` +
+      `Content-Length: ${new Blob([value]).size}\n` +
       `\n${value}\n`;
   }
 
   dataString += `--${boundary}--`;
 
-  let contentType = `multipart/form-data; boundary=${boundary}`;
-  let contentLength = new Blob([dataString]).size;
-  let multipartHeaders = {
+  const contentType = `multipart/form-data; boundary=${boundary}`;
+  const contentLength = new Blob([dataString]).size;
+
+  const multipartHeaders = {
     "Content-Type": contentType,
     "Content-Length": contentLength.toString(),
   };

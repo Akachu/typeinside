@@ -1,3 +1,6 @@
+import base64 from "base-64";
+import utf8 from "utf8";
+
 import request from "./request";
 import { RequestOptions, RequestResult } from "./interface";
 import { makeQueryString } from "../tool";
@@ -15,13 +18,13 @@ export namespace get {
     url: string,
     options: RequestOptions
   ): Promise<RequestResult> {
-    let { query } = options;
+    const { query } = options;
 
     if (query) {
       url += `?${makeQueryString(query)}`;
     }
 
-    let hash = atob(url);
+    const hash = base64.encode(utf8.encode(url));
 
     url = `${API.REDIRECT}?hash=${hash}`;
 

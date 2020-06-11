@@ -1,12 +1,13 @@
 import { RequestResult, RequestOptions } from "./interface";
-import axios from "axios";
+import { xhr } from "./xhr";
+
 export default async function request(
   url: string,
   options: RequestOptions = {}
 ): Promise<RequestResult> {
-  const { data, headers, status } = await axios(url, options);
+  const { data, headers, statusCode } = await xhr(url, options);
 
-  if (status === 302 && headers.location) {
+  if (statusCode === 302 && headers.location) {
     return request(headers.location);
   }
 
