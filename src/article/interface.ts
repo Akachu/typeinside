@@ -94,7 +94,7 @@ export enum ArticleSearchType {
 }
 
 export interface ArticleListOption {
-  page: number;
+  page?: number;
   search?: ArticleSearchOption;
 }
 

@@ -50,8 +50,12 @@ export namespace total {
     return {
       majorGalleryList: data.main_gall.map(parseSimpleGalleryData),
       minorGalleryList: data.minor_gall.map(parseSimpleGalleryData),
-      majorRecommendGalleryList: data.main_recomm_gall.map(parseSimpleGalleryData),
-      minorRecommendGalleryList: data.minor_recomm_gall.map(parseSimpleGalleryData),
+      majorRecommendGalleryList: data.main_recomm_gall.map(
+        parseSimpleGalleryData
+      ),
+      minorRecommendGalleryList: data.minor_recomm_gall.map(
+        parseSimpleGalleryData
+      ),
     };
   }
 

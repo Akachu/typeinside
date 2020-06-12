@@ -1,5 +1,5 @@
 import { HEADERS, CONTENT_TYPE } from "../api";
-import { makeQueryString } from "../tool";
+import { makeQueryString, getByteSize } from "../tool";
 import request from "./request";
 import { RequestMethod, RequestResult, RequestOptions } from "./interface";
 
@@ -20,14 +20,14 @@ function makeMultipartData(data: Record<string, string>) {
     dataString +=
       `--${boundary}\n` +
       `Content-Disposition: form-data; name="${key}"\n` +
-      `Content-Length: ${new Blob([value]).size}\n` +
+      `Content-Length: ${getByteSize(value)}\n` +
       `\n${value}\n`;
   }
 
   dataString += `--${boundary}--`;
 
   const contentType = `multipart/form-data; boundary=${boundary}`;
-  const contentLength = new Blob([dataString]).size;
+  const contentLength = getByteSize(dataString);
 
   const multipartHeaders = {
     "Content-Type": contentType,
@@ -49,7 +49,7 @@ export function post(
     headers: {
       ...headers,
       "Content-Type": CONTENT_TYPE.DEFAULT,
-      "Content-Length": new Blob([formData]).size.toString(),
+      "Content-Length": getByteSize(formData).toString(),
     },
     data: formData,
   };

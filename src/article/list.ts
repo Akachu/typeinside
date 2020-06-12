@@ -6,11 +6,13 @@ import { ArticleListOption } from "./interface";
 export async function list(
   galleryId: string,
   appId: string,
-  { page, search }: ArticleListOption = { page: 1 }
+  options: ArticleListOption = {}
 ) {
+  const { page, search } = options;
+
   const requestOption: RequestOptions = {
     query: {
-      page: page.toString(),
+      page: (page || 1).toString(),
       id: galleryId,
       app_id: appId,
     },

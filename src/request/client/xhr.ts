@@ -1,6 +1,6 @@
-import { makeQueryString } from "../tool";
-import { RequestOptions } from "./interface";
-import { HEADERS } from "../api";
+import { RequestOptions } from "../interface";
+import { makeQueryString } from "../../tool";
+import { HEADERS } from "../../api";
 
 export async function xhr(url: string, options: RequestOptions) {
   const { method, data, query } = options;
