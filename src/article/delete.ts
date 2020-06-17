@@ -1,10 +1,5 @@
-import {
-  GuestPassword,
-  Member,
-  isGuest,
-  isMember,
-  ArticleDeleteForm,
-} from "./interface";
+import { ArticleDeleteForm } from "./interface";
+import { GuestPassword, Member, isGuest, isMember } from "../interface";
 import { post } from "../request";
 import { API } from "../api";
 

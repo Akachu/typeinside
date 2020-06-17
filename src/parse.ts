@@ -24,8 +24,8 @@ export function parseTimeString(data: string) {
 }
 
 export function parseUser(data: any): User {
-  let ip = data.ip || data.ipData || "";
-  let user: User = {
+  const ip = data.ip || data.ipData || "";
+  const user: User = {
     name: data.name,
     userId: data.user_id || null,
     ip: ip !== "" ? ip : null,

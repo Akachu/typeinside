@@ -3,16 +3,16 @@ import { post, getResultData } from "../request";
 import {
   Guest,
   Member,
-  ArticleWriteForm,
   isGuest,
   isMember,
-} from "./interface";
+} from "../interface";
+import { ArticleWriteForm } from "./interface";
 
 export async function write<T extends Guest | Member>(
   form: ArticleWriteForm & T,
   appId: string
 ): Promise<number> {
-  const data: any = {
+  const data: Record<string, string> = {
     id: form.galleryId,
     app_id: appId,
     mode: "write",

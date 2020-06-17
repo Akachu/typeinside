@@ -4,3 +4,4 @@ export * from "./image";
 export * from "./write";
 export * from "./delete";
 export * from "./interface";
+export * from "./recommend";

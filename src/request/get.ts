@@ -15,17 +15,17 @@ export namespace get {
     url: string,
     options: RequestOptions
   ): Promise<RequestResult> {
-    let { query } = options;
+    const { query } = options;
 
     if (query) {
       url += `?${makeQueryString(query)}`;
     }
 
-    let hash = Buffer.from(url).toString("base64");
+    const hash = Buffer.from(url).toString("base64");
 
     url = `${API.REDIRECT}?hash=${hash}`;
 
-    let result = await get(url);
+    const result = await get(url);
 
     return result;
   }

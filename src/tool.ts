@@ -10,13 +10,16 @@ export function makeQueryString(query: Record<string, string>) {
 
 export function makeRandomString(length: number = 8) {
   let result = "";
-  const char =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const len = char.length;
-	
-	for (let i = 0; i < length; i++) {
+
+  for (let i = 0; i < length; i++) {
     result += char.charAt(Math.floor(Math.random() * len));
-	}
-	
+  }
+
   return result;
+}
+
+export function getByteSize(text: string): number {
+  return Buffer.byteLength(text, "utf8");
 }

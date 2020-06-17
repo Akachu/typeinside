@@ -13,3 +13,16 @@ export interface Comment {
   time: Date;
   user: User;
 }
+
+export interface CommentWriteForm {
+  gallery: string;
+  articleId: number;
+  body: string;
+  clientToken: string;
+}
+
+export interface CommentDeleteForm {
+  articleId: string;
+  index: string;
+  gallery: string;
+}

@@ -47,27 +47,6 @@ export interface ArticleDetail extends Article {
   isNotice: boolean;
 }
 
-export interface Guest {
-  name: string;
-  password: string;
-}
-
-export interface GuestPassword {
-  password: string;
-}
-
-export interface Member {
-  userId: string;
-}
-
-export function isGuest(data: any): data is Guest {
-  return data.userId === undefined;
-}
-
-export function isMember(data: any): data is Member {
-  return data.userId !== undefined;
-}
-
 export interface ArticleWriteForm {
   galleryId: string;
   title: string;
@@ -94,7 +73,7 @@ export enum ArticleSearchType {
 }
 
 export interface ArticleListOption {
-  page: number;
+  page?: number;
   search?: ArticleSearchOption;
 }
 

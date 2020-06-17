@@ -1,6 +1,6 @@
 import fs from "fs";
 import { HEADERS } from "../api";
-import { streamRequset } from "./client/http";
+import { streamRequset } from "./http";
 import { Transform } from "stream";
 
 export interface FileData {

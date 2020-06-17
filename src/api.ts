@@ -40,7 +40,9 @@ export const API = {
     DETAIL: "http://m.dcinside.com/api/gall_view.php",
     IMAGE: "http://m.dcinside.com/api/view_img.php",
     WRITE: "http://upload.dcinside.com/_app_write_api.php",
-    DELETE: "http://m.dcinside.com/api/gall_del.php"
+    DELETE: "http://m.dcinside.com/api/gall_del.php",
+    RECOMMEND: "http://m.dcinside.com/api/_recommend_up.php",
+    UNRECOMMEND: "http://m.dcinside.com/api/_recommend_down.php"
   },
   COMMENT: {
     LIST: "http://m.dcinside.com/api/comment_new.php",

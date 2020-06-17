@@ -1,9 +1,9 @@
 import http, { IncomingMessage } from "http";
 import https from "https";
-import { makeQueryString } from "../../tool";
+import { makeQueryString } from "../tool";
 import { parse as parseUrl } from "url";
-import { RequestOptions } from "../interface";
-import { HEADERS } from "../../api";
+import { RequestOptions } from "./interface";
+import { HEADERS } from "../api";
 import { Transform } from "stream";
 
 async function request(url: string, options: RequestOptions) {

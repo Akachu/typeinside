@@ -1,10 +1,10 @@
 import { HEADERS, CONTENT_TYPE } from "../api";
-import { makeQueryString } from "../tool";
+import { makeQueryString, getByteSize } from "../tool";
 import request from "./request";
 import { RequestMethod, RequestResult, RequestOptions } from "./interface";
 
 function makeMultipartData(data: Record<string, string>) {
-  let boundary = Math.random().toFixed(12).substr(2);
+  const boundary = Math.random().toFixed(12).substr(2);
 
   let dataString = "";
 
@@ -17,7 +17,7 @@ function makeMultipartData(data: Record<string, string>) {
       value = encodeURI(value);
     }
 
-    let length = Buffer.from(value).byteLength;
+    let length = getByteSize(value);
     dataString +=
       `--${boundary}\n` +
       `Content-Disposition: form-data; name="${key}"\n` +
@@ -28,7 +28,7 @@ function makeMultipartData(data: Record<string, string>) {
   dataString += `--${boundary}--`;
 
   let contentType = `multipart/form-data; boundary=${boundary}`;
-  let contentLength = Buffer.from(dataString).byteLength;
+  let contentLength = getByteSize(dataString);
   let multipartHeaders = {
     "Content-Type": contentType,
     "Content-Length": contentLength.toString(),
@@ -49,7 +49,7 @@ export function post(
     headers: {
       ...headers,
       "Content-Type": CONTENT_TYPE.DEFAULT,
-      "Content-Length": Buffer.byteLength(formData).toString(),
+      "Content-Length": getByteSize(formData).toString(),
     },
     data: formData,
   };
